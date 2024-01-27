@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.eggcampus.image.server.dao.ImageDao">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.eggcampus.image.server.pojo.ImageDO">
+        <id column="id" property="id" />
+        <result column="url" property="url" />
+        <result column="used" property="used" />
+        <result column="check_status" property="checkStatus" />
+        <result column="used_time" property="usedTime" />
+        <result column="application_id" property="applicationId" />
+        <result column="version" property="version" />
+        <result column="deleted" property="deleted" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, url, used, check_status, used_time, application_id, version, deleted
+    </sql>
+
+</mapper>

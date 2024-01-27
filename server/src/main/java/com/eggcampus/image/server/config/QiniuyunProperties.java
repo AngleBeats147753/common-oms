@@ -14,6 +14,8 @@ import javax.validation.constraints.Min;
 import javax.validation.constraints.NotEmpty;
 
 /**
+ * 自定义的七牛云属性
+ *
  * @author 黄磊
  */
 @Data
