@@ -60,7 +60,7 @@ public class ImageDO implements Serializable {
      * 审核状态（0-未审核,1-审核中,2-审核未通过,3-审核通过,4-无需审核）
      */
     @TableField("check_status")
-    private Byte checkStatus;
+    private CheckStatus checkStatus;
 
     /**
      * 使用时间
@@ -91,7 +91,7 @@ public class ImageDO implements Serializable {
     private Long deleted;
 
     @JsonDeserialize
-    enum CheckStatus implements BaseEnum<Integer> {
+    public enum CheckStatus implements BaseEnum<Integer> {
         /**
          * 未审核
          */

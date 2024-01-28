@@ -47,7 +47,10 @@ public class ApplicationDO implements Serializable {
     private String profile;
 
     /**
-     * 路径前缀
+     * 保存到OSS时的路径前缀
+     * <p>
+     * 当OSS为七牛云时，不能以斜杠开头，但必须以斜杠结尾
+     * </p>
      */
     @TableField("path_prefix")
     private String pathPrefix;

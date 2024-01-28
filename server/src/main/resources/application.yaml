@@ -1,2 +1,10 @@
-qiniuyun:
-  region: 华东
+server:
+  port: 9904
+spring:
+  application:
+    name: 'image'
+  profiles:
+    active: dev
+  cloud:
+    config:
+      enabled: false

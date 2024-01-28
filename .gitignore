@@ -135,3 +135,13 @@ buildNumber.properties
 .classpath
 
 # End of https://www.toptal.com/developers/gitignore/api/intellij+all,maven,java
+
+*.iml
+rebel.xml
+application-*.yml
+!application-dev.yml
+!application-autoTest.yml
+!/document/build/
+
+temp/
+Temp/

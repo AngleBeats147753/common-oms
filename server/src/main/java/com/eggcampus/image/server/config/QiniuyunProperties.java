@@ -30,10 +30,6 @@ public class QiniuyunProperties implements InitializingBean {
     private String bucket;
 
     /**
-     * 上传目录（假如没有斜杠/，会自动加上的）
-     */
-    private String uploadDir = "";
-    /**
      * 存储空间对应的域名
      */
     private String domainOfBucket;
@@ -41,7 +37,7 @@ public class QiniuyunProperties implements InitializingBean {
     /**
      * 存储空间所在的区域
      */
-    private QiniuyunRegion region;
+    private QiniuyunRegion region = QiniuyunRegion.AUTO;
     @Setter(AccessLevel.NONE)
     private Configuration bucketRegion = new Configuration(Region.autoRegion());
 
@@ -66,7 +62,6 @@ public class QiniuyunProperties implements InitializingBean {
      * 假如为null，那么文件大小限制等于sizeLimit
      * </p>
      */
-    @Min(value = -1, message = "文件大小限制不能小于-1")
     private DataSize fileSizeLimit;
     /**
      * 图像大小限制
@@ -74,7 +69,7 @@ public class QiniuyunProperties implements InitializingBean {
      * 假如为null，那么图像大小限制等于sizeLimit
      * </p>
      */
-    private DataSize photoSizeLimit;
+    private DataSize imageSizeLimit;
     /**
      * 视频大小限制
      * <p>
@@ -88,8 +83,8 @@ public class QiniuyunProperties implements InitializingBean {
         if (this.fileSizeLimit == null) {
             this.fileSizeLimit = this.sizeLimit;
         }
-        if (this.photoSizeLimit == null) {
-            this.photoSizeLimit = this.sizeLimit;
+        if (this.imageSizeLimit == null) {
+            this.imageSizeLimit = this.sizeLimit;
         }
         if (this.videoSizeLimit == null) {
             this.videoSizeLimit = this.sizeLimit;
@@ -104,13 +99,6 @@ public class QiniuyunProperties implements InitializingBean {
             case SINGAPORE -> new Configuration(Region.xinjiapo());
             default -> new Configuration(Region.autoRegion());
         };
-    }
-
-    public void setUploadDir(String uploadDir) {
-        if (!uploadDir.endsWith("/")) {
-            uploadDir += "/";
-        }
-        this.uploadDir = uploadDir;
     }
 
     enum QiniuyunRegion {
