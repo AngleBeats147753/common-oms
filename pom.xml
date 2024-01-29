@@ -19,6 +19,62 @@
         <maven.compiler.source>17</maven.compiler.source>
         <maven.compiler.target>17</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <spring.boot.version>2.7.14</spring.boot.version>
+        <hutool.version>5.8.25</hutool.version>
+        <mybatis.plus.version>3.5.3.1</mybatis.plus.version>
+        <eggcampus.common.util.version>0.1-SNAPSHOT</eggcampus.common.util.version>
+        <eggcampus.image.util.version>1.0-SNAPSHOT</eggcampus.image.util.version>
     </properties>
 
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-dependencies</artifactId>
+                <version>${spring.boot.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>cn.hutool</groupId>
+                <artifactId>hutool-bom</artifactId>
+                <version>${hutool.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>com.baomidou</groupId>
+                <artifactId>mybatis-plus-boot-starter</artifactId>
+                <version>${mybatis.plus.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.eggcampus.util</groupId>
+                <artifactId>common-util</artifactId>
+                <version>${eggcampus.common.util.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.eggcampus.image</groupId>
+                <artifactId>util</artifactId>
+                <version>${eggcampus.image.util.version}</version>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <scope>provided</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-api</artifactId>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
 </project>

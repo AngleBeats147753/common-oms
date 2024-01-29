@@ -11,8 +11,8 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 
-import static com.eggcampus.image.server.pojo.ImageDO.CheckStatus.CHECK_FAILED;
-import static com.eggcampus.image.server.pojo.ImageDO.CheckStatus.CHECK_SUCCESS;
+import static com.eggcampus.image.enums.CheckStatus.CHECK_FAILED;
+import static com.eggcampus.image.enums.CheckStatus.CHECK_SUCCESS;
 import static com.eggcampus.util.result.AliErrorCode.USER_ERROR_A0402;
 
 /**

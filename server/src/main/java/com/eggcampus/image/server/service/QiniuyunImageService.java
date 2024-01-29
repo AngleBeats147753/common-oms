@@ -2,13 +2,13 @@ package com.eggcampus.image.server.service;
 
 import cn.hutool.core.net.url.UrlBuilder;
 import cn.hutool.core.util.URLUtil;
+import com.eggcampus.image.enums.CheckStatus;
 import com.eggcampus.image.pojo.UploadTokenDTO;
 import com.eggcampus.image.server.config.QiniuyunProperties;
 import com.eggcampus.image.server.manager.ApplicationManager;
 import com.eggcampus.image.server.manager.ImageManager;
 import com.eggcampus.image.server.pojo.ApplicationDO;
 import com.eggcampus.image.server.pojo.ImageDO;
-import com.eggcampus.image.server.pojo.ImageDO.CheckStatus;
 import com.eggcampus.image.server.pojo.qo.CheckStatusModificationQO;
 import com.eggcampus.image.server.pojo.qo.DeleteQO;
 import com.eggcampus.image.server.pojo.qo.UploadTokenGenerationQO;

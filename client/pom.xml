@@ -17,21 +17,42 @@
         <maven.compiler.target>17</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <spring.boot.version>2.7.14</spring.boot.version>
+        <hutool.version>5.8.16</hutool.version>
     </properties>
+
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>cn.hutool</groupId>
+                <artifactId>hutool-bom</artifactId>
+                <version>${hutool.version}</version>
+                <type>pom</type>
+                <!-- 注意这里是import -->
+                <scope>import</scope>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
 
     <dependencies>
         <dependency>
-            <groupId>org.projectlombok</groupId>
-            <artifactId>lombok</artifactId>
-            <version>1.18.30</version>
-            <scope>provided</scope>
-            <optional>true</optional>
+            <groupId>com.eggcampus.util</groupId>
+            <artifactId>common-util</artifactId>
         </dependency>
 
         <dependency>
-            <groupId>com.eggcampus.util</groupId>
-            <artifactId>common-util</artifactId>
-            <version>0.1-SNAPSHOT</version>
+            <groupId>com.eggcampus.image</groupId>
+            <artifactId>util</artifactId>
         </dependency>
+
+        <dependency>
+            <groupId>cn.hutool</groupId>
+            <artifactId>hutool-http</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>cn.hutool</groupId>
+            <artifactId>hutool-json</artifactId>
+        </dependency>
+
     </dependencies>
 </project>

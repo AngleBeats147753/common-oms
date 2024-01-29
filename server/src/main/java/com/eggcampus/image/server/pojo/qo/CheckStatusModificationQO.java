@@ -1,6 +1,6 @@
 package com.eggcampus.image.server.pojo.qo;
 
-import com.eggcampus.image.server.pojo.ImageDO.CheckStatus;
+import com.eggcampus.image.enums.CheckStatus;
 import lombok.Data;
 
 import javax.validation.constraints.NotEmpty;
