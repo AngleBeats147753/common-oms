@@ -69,7 +69,7 @@ public class QiniuyunImageService implements ImageService, InitializingBean {
     }
 
     private String getURL(String path) {
-        return UrlBuilder.create()
+        return UrlBuilder.of()
                 .setCharset(null)
                 .setScheme("https")
                 .setHost(properties.getDomainOfBucket())

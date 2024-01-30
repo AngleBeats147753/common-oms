@@ -2,19 +2,12 @@ package com.eggcampus.image.server.pojo;
 
 import com.baomidou.mybatisplus.annotation.*;
 import com.eggcampus.image.enums.CheckStatus;
-import com.eggcampus.util.mybatis.enums.BaseEnum;
-import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonValue;
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import lombok.Data;
-import lombok.Getter;
 
 import java.io.Serial;
 import java.io.Serializable;
 import java.time.LocalDateTime;
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * <p>

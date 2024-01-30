@@ -43,6 +43,7 @@ public class ImageController {
         return ReturnResult.getSuccessReturn("更改图像审核状态成功");
     }
 
+    // TODO 删除返回的状态一定是正常的，再大的错误也不能返回给客户端，调用该接口后代表服务器种没有这个图像了
     @DeleteMapping("/image")
     public ReturnResult deleteImage(@Validated DeleteQO qo) {
         imageService.delete(qo);
