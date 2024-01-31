@@ -1,6 +1,6 @@
 package com.eggcampus.image.server.pojo.qo;
 
-import com.eggcampus.util.application.ApplicationDTO;
+import com.eggcampus.util.spring.application.ApplicationDTO;
 import lombok.Data;
 
 import javax.validation.constraints.NotEmpty;

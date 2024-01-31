@@ -1,6 +1,6 @@
 package com.eggcampus.image.enums;
 
-import com.eggcampus.util.mybatis.enums.BaseEnum;
+import com.eggcampus.util.spring.mybatisplus.enums.BaseEnum;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;

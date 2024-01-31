@@ -6,10 +6,10 @@ import cn.hutool.json.JSONObject;
 import cn.hutool.json.JSONUtil;
 import com.eggcampus.image.enums.CheckStatus;
 import com.eggcampus.image.pojo.UploadTokenDTO;
-import com.eggcampus.util.application.ApplicationDTO;
 import com.eggcampus.util.exception.EggCampusException;
 import com.eggcampus.util.result.AliErrorCode;
 import com.eggcampus.util.result.ReturnResult;
+import com.eggcampus.util.spring.application.ApplicationDTO;
 import lombok.NonNull;
 
 import java.util.List;

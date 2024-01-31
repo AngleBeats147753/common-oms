@@ -2,7 +2,7 @@ package com.eggcampus.image.server.manager;
 
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.eggcampus.image.server.pojo.ImageDO;
-import com.eggcampus.util.mybatis.exception.NotFoundException;
+import com.eggcampus.util.spring.mybatisplus.exception.NotFoundException;
 
 /**
  * @author 黄磊

@@ -4,7 +4,7 @@ package com.eggcampus.image.manager;
  * 图像服务的客户端工具
  *
  * <p>
- * 图像服务器所需的applicationName、applicationProfile会通过{@link com.eggcampus.util.application.ApplicationManager} 获取
+ * 图像服务器所需的applicationName、applicationProfile会通过{@link com.eggcampus.util.spring.application.ApplicationManager} 获取
  * </p>
  *
  * @author 黄磊

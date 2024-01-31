@@ -1,6 +1,6 @@
 package com.eggcampus.image.config;
 
-import com.eggcampus.util.application.EnableApplicationManager;
+import com.eggcampus.util.spring.application.EnableApplicationManager;
 import org.springframework.context.annotation.Configuration;
 
 /**
