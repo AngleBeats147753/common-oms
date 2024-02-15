@@ -20,10 +20,6 @@ public class ImageManagerImpl extends VersionServiceImpl<ImageDao, ImageDO> impl
 
     @Override
     public ImageDO findByURL(String url) {
-        ImageDO imageDO = getByURL(url);
-        if (imageDO == null) {
-            throw new NotFoundException("图像不存在，url<%s>".formatted(url));
-        }
-        return imageDO;
+        return getByURL(url);
     }
 }

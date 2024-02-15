@@ -6,6 +6,8 @@ import com.eggcampus.image.server.pojo.qo.UploadTokenGenerationQO;
 import com.eggcampus.image.server.pojo.qo.UsageQO;
 import com.eggcampus.util.result.ReturnResult;
 
+import java.util.List;
+
 /**
  * @author 黄磊
  */
@@ -38,4 +40,16 @@ public interface ImageService {
      * @param qo 删除对象时所需的数据
      */
     void delete(DeleteQO qo);
+
+    /**
+     * 批量使用资源对象
+     * @param usageQOList 存储对象使用信息所需的数据列表
+     */
+    void useImageList(List<UsageQO> usageQOList);
+
+    /**
+     * 批量删除存储对象
+     * @param deleteQoList 删除对象所需要的数据
+     */
+    void deleteImageList(List<DeleteQO> deleteQoList);
 }

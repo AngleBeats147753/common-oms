@@ -17,17 +17,23 @@ import com.eggcampus.util.exception.EggCampusException;
 import com.eggcampus.util.result.AliErrorCode;
 import com.eggcampus.util.result.ReturnResult;
 import com.eggcampus.util.spring.application.ApplicationDTO;
+import com.eggcampus.util.spring.mybatisplus.exception.NotFoundException;
 import com.qiniu.storage.BucketManager;
 import com.qiniu.util.Auth;
 import com.qiniu.util.StringMap;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.sql.Array;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author 黄磊
  */
+@Slf4j
 public class QiniuyunImageService implements ImageService, InitializingBean {
     private final ApplicationManager applicationManager;
     private final ImageManager imageManager;
@@ -101,6 +107,9 @@ public class QiniuyunImageService implements ImageService, InitializingBean {
     @Override
     public void use(UsageQO qo) {
         ImageDO imageDO = imageManager.findByURL(qo.getImageURL());
+        if (imageDO == null) {
+            throw new NotFoundException("图像不存在，url<%s>".formatted(qo.getImageURL()));
+        }
         if (imageDO.getUsed()) {
             throw new EggCampusException(AliErrorCode.USER_ERROR_A0402, "图像已使用");
         }
@@ -113,6 +122,9 @@ public class QiniuyunImageService implements ImageService, InitializingBean {
     @Override
     public void modifyCheckStatus(CheckStatusModificationQO qo) {
         ImageDO imageDO = imageManager.findByURL(qo.getImageURL());
+        if (imageDO == null) {
+            throw new NotFoundException("图像不存在，url<%s>".formatted(qo.getImageURL()));
+        }
         if (CheckStatus.NO_NEED_CHECK.equals(imageDO.getCheckStatus())) {
             throw new EggCampusException(AliErrorCode.USER_ERROR_A0402, "不需要审核的图像不能修改审核状态");
         }
@@ -123,14 +135,32 @@ public class QiniuyunImageService implements ImageService, InitializingBean {
 
     @Override
     @Transactional(rollbackFor = Exception.class)
+    public void useImageList(List<UsageQO> usageQoList) {
+        for (UsageQO usageQo : usageQoList) {
+            use(usageQo);
+        }
+    }
+
+    @Override
     public void delete(DeleteQO qo) {
         ImageDO imageDO = imageManager.findByURL(qo.getImageURL());
+        if (imageDO == null) {
+            log.info("删除的图像不存在，url<%s>".formatted(qo.getImageURL()));
+            return;
+        }
         imageManager.removeById(imageDO.getId());
         try {
             String key = URLUtil.getPath(imageDO.getUrl()).substring(1);
             bucketManager.delete(properties.getBucket(), key);
         } catch (Exception e) {
-            throw new EggCampusException(AliErrorCode.SERVICE_ERROR_C0001, "删除图像失败", e);
+            log.error("删除图像失败，url<%s>".formatted(qo.getImageURL()));
+        }
+    }
+
+    @Override
+    public void deleteImageList(List<DeleteQO> deleteQoList) {
+        for (DeleteQO deleteQo : deleteQoList) {
+            delete(deleteQo);
         }
     }
 }
