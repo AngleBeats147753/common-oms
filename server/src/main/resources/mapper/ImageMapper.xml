@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.eggcampus.image.server.dao.ImageDao">
+<mapper namespace="com.eggcampus.object.server.dao.ObjectDao">
 
     <!-- 通用查询映射结果 -->
-    <resultMap id="BaseResultMap" type="com.eggcampus.image.server.pojo.ImageDO">
+    <resultMap id="BaseResultMap" type="com.eggcampus.object.server.pojo.ObjectDO">
         <id column="id" property="id" />
         <result column="url" property="url" />
         <result column="used" property="used" />
