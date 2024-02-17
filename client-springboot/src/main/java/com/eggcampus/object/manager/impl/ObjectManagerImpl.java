@@ -5,7 +5,10 @@ import com.eggcampus.object.enums.CheckStatus;
 import com.eggcampus.object.manager.ObjectManager;
 import com.eggcampus.object.pojo.UploadTokenDTO;
 import com.eggcampus.util.spring.application.ApplicationDTO;
+import com.eggcampus.util.spring.application.ApplicationManager;
 import lombok.RequiredArgsConstructor;
+
+import java.util.List;
 
 /**
  * @author huangshuaijie
@@ -15,11 +18,12 @@ import lombok.RequiredArgsConstructor;
 public class ObjectManagerImpl implements ObjectManager {
 
     private final ObjectClient objectClient;
+    private final ApplicationManager applicationManager;
 
 
     @Override
-    public UploadTokenDTO createUploadToken(ApplicationDTO application, String imageName) {
-        return objectClient.generateUploadToken(application, imageName);
+    public UploadTokenDTO createUploadToken(String imageName) {
+        return objectClient.generateUploadToken(applicationManager.findApplication(), imageName);
     }
 
     @Override
@@ -39,11 +43,21 @@ public class ObjectManagerImpl implements ObjectManager {
 
     @Override
     public void deleteObject(String objectUrl) {
-        objectClient.deleteImage(objectUrl);
+        objectClient.deleteObject(objectUrl);
     }
 
     @Override
     public String getBaseUrl() {
         return objectClient.getBaseUrl();
+    }
+
+    @Override
+    public void deleteObjectList(List<String> imageUrlList) {
+        objectClient.deleteObjectList(imageUrlList);
+    }
+
+    @Override
+    public void useObjectList(List<String> objectList, boolean needCheck) {
+        objectClient.useObjectList(objectList, needCheck);
     }
 }

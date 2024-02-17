@@ -12,8 +12,8 @@ import java.util.List;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class ImageStateTracker {
-    private List<String> newImages;
-    private List<String> deletedImages;
-    private List<String> stableImages;
+public class ObjectStateTracker {
+    private List<String> newObjects;
+    private List<String> deletedObjects;
+    private List<String> stableObjects;
 }

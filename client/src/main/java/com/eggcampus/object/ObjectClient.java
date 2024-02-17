@@ -58,12 +58,12 @@ public class ObjectClient {
     }
 
     public void useOrDeleteObject(List<String> newServiceImages, List<String> oldServiceImages, Boolean needCheck) {
-        ImageStateTracker imageStateTracker = ImageUtil.compare(oldServiceImages, newServiceImages);
-        for (String newImage : imageStateTracker.getNewImages()) {
+        ObjectStateTracker objectStateTracker = ObjectUtil.compare(oldServiceImages, newServiceImages);
+        for (String newImage : objectStateTracker.getNewObjects()) {
             this.useObject(newImage, needCheck);
         }
-        for (String deletedImage : imageStateTracker.getDeletedImages()) {
-            this.deleteImage(deletedImage);
+        for (String deletedImage : objectStateTracker.getDeletedObjects()) {
+            this.deleteObject(deletedImage);
         }
     }
 
@@ -109,13 +109,13 @@ public class ObjectClient {
         executeRequest(request);
     }
 
-    public void deleteImage(String imageURL) {
+    public void deleteObject(String imageURL) {
         HttpRequest request = HttpUtil.createRequest(Method.DELETE, this.baseUrl + DELETE_IMAGE_URL)
                 .form("imageURL", imageURL);
         executeRequest(request);
     }
 
-    public void deleteImageList(List<String> imageUrlList) {
+    public void deleteObjectList(List<String> imageUrlList) {
         List<DeleteQO> deleteQoList = new ArrayList<>(imageUrlList.size());
         for (String s : imageUrlList) {
             DeleteQO deleteQO = new DeleteQO();

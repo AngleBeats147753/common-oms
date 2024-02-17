@@ -1,7 +1,10 @@
 package com.eggcampus.object.manager;
 
+import com.eggcampus.object.enums.CheckStatus;
 import com.eggcampus.object.pojo.UploadTokenDTO;
 import com.eggcampus.util.spring.application.ApplicationDTO;
+
+import java.util.List;
 
 /**
  * 图像服务的客户端工具
@@ -17,10 +20,9 @@ public interface ObjectManager {
      * 创建上传凭证
      *
      * @param imageName   图片名称
-     * @param application 应用名称
      * @return 上传凭证
      */
-    UploadTokenDTO createUploadToken(ApplicationDTO application, String imageName);
+    UploadTokenDTO createUploadToken(String imageName);
 
     /**
      * 使用图片
@@ -58,4 +60,10 @@ public interface ObjectManager {
      * @return 基础URL
      */
     String getBaseUrl();
+
+    void deleteObjectList(List<String> imageUrlList);
+
+    void useObjectList(List<String> objectList, boolean needCheck);
+
+
 }
