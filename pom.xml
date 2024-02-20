@@ -4,8 +4,16 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
+    <!-- 假如创建的项目是一个Springboot项目，那么要加上这个parent标签。假如不是Springboot项目，就不需要加parent标签 -->
+    <parent>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-parent</artifactId>
+        <version>2.7.14</version>
+    </parent>
+
     <groupId>com.eggcampus.image</groupId>
-    <artifactId>common-image</artifactId>
+    <!-- 父项目的artifactId请固定为parent -->
+    <artifactId>parent</artifactId>
     <packaging>pom</packaging>
     <version>1.0-SNAPSHOT</version>
     <modules>
@@ -16,18 +24,48 @@
     </modules>
 
     <properties>
+        <java.version>17</java.version>
         <maven.compiler.source>17</maven.compiler.source>
         <maven.compiler.target>17</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <spring.boot.version>2.7.14</spring.boot.version>
         <hutool.version>5.8.25</hutool.version>
+        <!-- 在有server子项目的时候，spring-cloud.version是必须的 -->
+        <spring-cloud.version>2021.0.7</spring-cloud.version>
         <mybatis.plus.version>3.5.3.1</mybatis.plus.version>
         <eggcampus.common.util.version>0.1-SNAPSHOT</eggcampus.common.util.version>
         <eggcampus.image.util.version>1.0-SNAPSHOT</eggcampus.image.util.version>
     </properties>
-
+    <!-- 设置依赖管理，在这里定义过的dependency，在使用时只需指定groupId和artifactId就好了，省去指定版本等标签 -->
+    <!-- 注意1：子项目会继承父项目的dependencyManagement，所以不要重复设置 -->
     <dependencyManagement>
         <dependencies>
+            <dependency>
+                <groupId>org.projectlombok</groupId>
+                <artifactId>lombok</artifactId>
+                <!-- 注意：lombok.version是继承自spring-boot-starter-parent的 -->
+                <version>${lombok.version}</version>
+                <scope>provided</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>org.junit.jupiter</groupId>
+                <artifactId>junit-jupiter-api</artifactId>
+                <!-- 注意：junit-jupiter.version是继承自spring-boot-starter-parent的 -->
+                <version>${junit-jupiter.version}</version>
+                <scope>test</scope>
+            </dependency>
+
+            <!-- 在有server子项目的时候，spring-cloud-dependencies是必须的 -->
+            <dependency>
+                <groupId>org.springframework.cloud</groupId>
+                <artifactId>spring-cloud-dependencies</artifactId>
+                <version>${spring-cloud.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+
+            <!-- 原依赖 -->
             <dependency>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-dependencies</artifactId>
@@ -64,17 +102,19 @@
         </dependencies>
     </dependencyManagement>
 
+    <!-- 设置依赖 -->
+    <!-- 注意1：子项目会继承父项目的dependencies，所以不要重复设置。这里相当于所有子项目中默认都加了lombok、junit -->
+    <!-- 注意2：父项目的dependencies通常仅设置lombok、junit就好，其他的在子项目中设置 -->
     <dependencies>
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
-            <scope>provided</scope>
         </dependency>
 
         <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter-api</artifactId>
-            <scope>test</scope>
         </dependency>
     </dependencies>
+
 </project>
