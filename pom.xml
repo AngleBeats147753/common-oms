@@ -117,4 +117,13 @@
         </dependency>
     </dependencies>
 
+    <distributionManagement>
+        <repository>
+            <!--必须与 settings.xml 的 id 一致-->
+            <id>eggcampus-backend-public-server-default-maven</id>
+            <name>default-maven</name>
+            <url>https://eggcampus-maven.pkg.coding.net/repository/backend-public-server/default-maven/</url>
+        </repository>
+    </distributionManagement>
+
 </project>
