@@ -139,8 +139,11 @@ buildNumber.properties
 *.iml
 rebel.xml
 application-*.yml
+application-*.yaml
 !application-dev.yml
+!application-dev.yaml
 !application-autoTest.yml
+!application-autoTest.yaml
 !/document/build/
 
 temp/
