@@ -2,7 +2,7 @@ server:
   port: 9904
 spring:
   application:
-    name: 'image'
+    name: 'common-image'
   profiles:
     active: dev
   cloud:
