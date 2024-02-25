@@ -4,7 +4,6 @@ import cn.hutool.http.*;
 import cn.hutool.json.JSON;
 import cn.hutool.json.JSONObject;
 import cn.hutool.json.JSONUtil;
-import com.eggcampus.object.enums.CheckStatus;
 import com.eggcampus.object.pojo.UploadTokenDTO;
 import com.eggcampus.util.exception.EggCampusException;
 import com.eggcampus.util.result.AliErrorCode;
@@ -122,7 +121,7 @@ public class ObjectClient {
             deleteQO.setImageURL(s);
             deleteQoList.add(deleteQO);
         }
-        HttpRequest request = HttpUtil.createRequest(Method.DELETE, this.baseUrl + DELETE_IMAGE_URL)
+        HttpRequest request = HttpUtil.createRequest(Method.DELETE, this.baseUrl + DELETE_IMAG_LIST_URL)
                 .form("deleteQoList", deleteQoList);
         executeRequest(request);
     }

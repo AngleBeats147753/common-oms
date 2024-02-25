@@ -1,10 +1,8 @@
 package com.eggcampus.object.manager.impl;
 
 import com.eggcampus.object.ObjectClient;
-import com.eggcampus.object.enums.CheckStatus;
 import com.eggcampus.object.manager.ObjectManager;
 import com.eggcampus.object.pojo.UploadTokenDTO;
-import com.eggcampus.util.spring.application.ApplicationDTO;
 import com.eggcampus.util.spring.application.ApplicationManager;
 import lombok.RequiredArgsConstructor;
 

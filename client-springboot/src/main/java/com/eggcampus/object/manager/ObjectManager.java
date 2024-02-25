@@ -1,8 +1,6 @@
 package com.eggcampus.object.manager;
 
-import com.eggcampus.object.enums.CheckStatus;
 import com.eggcampus.object.pojo.UploadTokenDTO;
-import com.eggcampus.util.spring.application.ApplicationDTO;
 
 import java.util.List;
 
