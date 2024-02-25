@@ -99,7 +99,7 @@ public class ObjectClient {
         executeRequest(request);
     }
 
-    public void modifyObjectCheckStatus(String objectUrl, CheckStatus checkStatus) {
+    public void modifyObjectCheckStatus(String objectUrl, String checkStatus) {
         JSONObject body = new JSONObject();
         body.set("imageURL", objectUrl);
         body.set("checkStatus", checkStatus);
@@ -109,9 +109,9 @@ public class ObjectClient {
         executeRequest(request);
     }
 
-    public void deleteObject(String imageURL) {
+    public void deleteObject(String objectUrl) {
         HttpRequest request = HttpUtil.createRequest(Method.DELETE, this.baseUrl + DELETE_IMAGE_URL)
-                .form("imageURL", imageURL);
+                .form("objectUrl", objectUrl);
         executeRequest(request);
     }
 

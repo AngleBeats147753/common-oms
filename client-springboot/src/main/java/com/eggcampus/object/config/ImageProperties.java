@@ -15,7 +15,7 @@ public class ImageProperties {
     /**
      * host
      */
-    private String host = "";
+    private String host = "localhost";
 
 
     /**

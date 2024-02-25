@@ -40,6 +40,22 @@ public interface ObjectManager {
     void useObject(String objectUrl, Boolean needCheck);
 
     /**
+     * 使用新资源并删除旧资源
+     *
+     * @param newServiceImages  新资源列表
+     * @param oldServiceImages  旧资源列表
+     */
+    void useOrDeleteObject(List<String> newServiceImages, List<String> oldServiceImages);
+
+    /**
+     * 使用新资源并删除旧资源
+     *
+     * @param newServiceImages  新资源列表
+     * @param oldServiceImages  旧资源列表
+     */
+    void useOrDeleteObject(List<String> newServiceImages, List<String> oldServiceImages, boolean needCheck);
+
+    /**
      * 修改审核状态
      *
      * @param objectUrl  资源对象URL

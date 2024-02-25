@@ -37,8 +37,18 @@ public class ObjectManagerImpl implements ObjectManager {
     }
 
     @Override
+    public void useOrDeleteObject(List<String> newServiceImages, List<String> oldServiceImages) {
+        objectClient.useOrDeleteObject(newServiceImages, oldServiceImages);
+    }
+
+    @Override
+    public void useOrDeleteObject(List<String> newServiceImages, List<String> oldServiceImages, boolean needCheck) {
+        objectClient.useOrDeleteObject(newServiceImages, oldServiceImages, needCheck);
+    }
+
+    @Override
     public void modifyCheckStatus(String objectUrl, String needCheck) {
-        objectClient.modifyObjectCheckStatus(objectUrl, CheckStatus.createByName(needCheck));
+        objectClient.modifyObjectCheckStatus(objectUrl, needCheck);
     }
 
     @Override

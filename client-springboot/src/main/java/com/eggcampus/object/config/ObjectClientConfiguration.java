@@ -12,14 +12,15 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 /**
- * @author 黄磊
+ * EnableResourceClient的配置类
+ * @author created by huangshuaijie on 2024/2/25
+ * @since v1.0
  */
 @Configuration
 @EnableApplicationManager
 @EnableConfigurationProperties({ImageProperties.class})
 @RequiredArgsConstructor
-public class ImageAutoConfigConfig {
-
+public class ObjectClientConfiguration {
     private final ImageProperties imageProperties;
     private final ApplicationManager applicationManager;
 
