@@ -2,9 +2,9 @@ server:
   port: 9904
 spring:
   application:
-    name: 'common-image'
+    name: 'common-object'
   profiles:
-    active: dev
+    active: pro
   cloud:
     config:
       enabled: false
