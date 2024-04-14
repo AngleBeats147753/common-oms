@@ -2,6 +2,7 @@ package com.eggcampus.object.server.manager;
 
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.eggcampus.object.server.pojo.ObjectDO;
+import com.eggcampus.object.server.pojo.ObjectDO.CheckStatus;
 import com.eggcampus.object.server.pojo.ObjectDO.UsageStatus;
 import com.eggcampus.util.spring.mybatisplus.exception.NotFoundException;
 
@@ -41,10 +42,26 @@ public interface ObjectManager extends IService<ObjectDO> {
     void assertExistenceByURL(String url);
 
     /**
+     * 断言资源对象的使用状态
+     *
+     * @param objectDO    资源对象
+     * @param usageStatus 使用状态
+     */
+    void assertUsageStatus(ObjectDO objectDO, UsageStatus usageStatus);
+
+    /**
      * 通过URL断言资源对象的使用状态
-     * 
-     * @param url        url
+     *
+     * @param url         url
      * @param usageStatus 使用状态
      */
     void assertUsageStatusByURL(String url, UsageStatus usageStatus);
+
+    /**
+     * 通过URL断言资源对象的审核状态
+     *
+     * @param url         url
+     * @param checkStatus 审核状态
+     */
+    void assertCheckStatusByURL(String url, CheckStatus checkStatus);
 }

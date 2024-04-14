@@ -6,6 +6,8 @@ import lombok.Data;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 
+import static com.eggcampus.object.server.pojo.ObjectDO.*;
+
 /**
  * @author 黄磊
  */
@@ -15,5 +17,5 @@ public class CheckStatusModificationQO {
     private String imageURL;
 
     @NotNull(message = "checkStatus不能为null")
-    private ObjectDO.CheckStatus checkStatus;
+    private CheckStatus checkStatus;
 }

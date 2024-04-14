@@ -2,7 +2,6 @@ package com.eggcampus.object.server.service;
 
 import cn.hutool.core.net.url.UrlBuilder;
 import cn.hutool.core.util.StrUtil;
-import cn.hutool.core.util.URLUtil;
 import cn.hutool.extra.servlet.ServletUtil;
 import cn.hutool.json.JSONUtil;
 import com.eggcampus.object.pojo.UploadTokenDTO;
@@ -18,7 +17,6 @@ import com.eggcampus.object.server.pojo.qo.UploadTokenGenerationQO;
 import com.eggcampus.object.server.pojo.qo.UsageQO;
 import com.eggcampus.util.exception.EggCampusException;
 import com.eggcampus.util.result.AliErrorCode;
-import com.eggcampus.util.spring.mybatisplus.exception.NotFoundException;
 import com.qiniu.http.Headers;
 import com.qiniu.storage.BucketManager;
 import com.qiniu.util.Auth;
@@ -67,7 +65,7 @@ public class QiniuyunObjectService implements ObjectService, InitializingBean {
     @Override
     public UploadTokenDTO generateUploadToken(UploadTokenGenerationQO qo) {
         ApplicationDO application = applicationService.findApplication(qo.getApplication());
-        String path = application.getPathPrefix() + qo.getObjectName();
+        String path = application.getPathPrefix() + qo.getImageName();
         String url = getURL(path);
         objectManager.assertNonExistenceByURL(url);
 
@@ -109,18 +107,16 @@ public class QiniuyunObjectService implements ObjectService, InitializingBean {
     }
 
     @Override
+    @Transactional
     public void use(UsageQO qo) {
         ObjectDO objectDO = objectManager.findByURL(qo.getImageURL());
-        objectManager.assertUsageStatusByURL(qo.getImageURL(), UsageStatus.UPLOADED);
-        modifyUsageStatus(objectDO, UsageStatus.USED, false);
+        modifyUsageStatus(objectDO, UsageStatus.USED, qo.getNeedCheck());
     }
 
     @Override
+    @Transactional
     public void modifyCheckStatus(CheckStatusModificationQO qo) {
         ObjectDO objectDO = objectManager.findByURL(qo.getImageURL());
-        if (objectDO == null) {
-            throw new NotFoundException("资源对象不存在，url<%s>".formatted(qo.getImageURL()));
-        }
         if (CheckStatus.NO_NEED_CHECK.equals(objectDO.getCheckStatus())) {
             throw new EggCampusException(AliErrorCode.USER_ERROR_A0402, "不需要审核的资源对象不能修改审核状态");
         }
@@ -128,9 +124,8 @@ public class QiniuyunObjectService implements ObjectService, InitializingBean {
         objectManager.updateById(objectDO);
     }
 
-
     @Override
-    @Transactional(rollbackFor = Exception.class)
+    @Transactional
     public void useObjectList(List<UsageQO> usageQoList) {
         for (UsageQO usageQo : usageQoList) {
             use(usageQo);
@@ -138,30 +133,22 @@ public class QiniuyunObjectService implements ObjectService, InitializingBean {
     }
 
     @Override
+    @Transactional
     public void delete(DeleteQO qo) {
         ObjectDO objectDO = objectManager.findByURL(qo.getObjectUrl());
-        if (objectDO == null) {
-            log.info("删除的资源对象不存在，url<%s>".formatted(qo.getObjectUrl()));
-            return;
-        }
-        objectManager.removeById(objectDO.getId());
-        try {
-            String key = URLUtil.getPath(objectDO.getUrl()).substring(1);
-            bucketManager.delete(properties.getBucket(), key);
-        } catch (Exception e) {
-            log.error("删除资源对象失败，url<%s>".formatted(qo.getObjectUrl()));
-        }
+        modifyUsageStatus(objectDO, UsageStatus.PRE_DELETED);
     }
 
     @Override
+    @Transactional
     public void deleteObjectList(List<DeleteQO> deleteQoList) {
         for (DeleteQO deleteQo : deleteQoList) {
             delete(deleteQo);
         }
     }
 
-    @Transactional
     @Override
+    @Transactional
     public String handleOssCallback(HttpServletRequest request) {
         try {
             byte[] bodyBytes = request.getInputStream().readAllBytes();
@@ -171,7 +158,6 @@ public class QiniuyunObjectService implements ObjectService, InitializingBean {
             }
 
             String url = JSONUtil.parseObj(bodyStr).getStr(OSS_CALLBACK_BODY_URL_KEY);
-            objectManager.assertUsageStatusByURL(url, UsageStatus.GENERATED);
             modifyUsageStatus(url, UsageStatus.UPLOADED);
 
             return bodyStr;
@@ -200,21 +186,29 @@ public class QiniuyunObjectService implements ObjectService, InitializingBean {
         modifyUsageStatus(objectDO, status, null);
     }
 
+    private void modifyUsageStatus(ObjectDO objectDO, UsageStatus status) {
+        modifyUsageStatus(objectDO, status, null);
+    }
+
     private void modifyUsageStatus(ObjectDO objectDO, UsageStatus status, Boolean needCheck) {
-        objectDO.setUsageStatus(status);
         switch (status) {
             case UPLOADED:
+                objectManager.assertUsageStatus(objectDO, UsageStatus.GENERATED);
                 objectDO.setUploadedTime(LocalDateTime.now());
                 break;
             case USED:
+                objectManager.assertUsageStatus(objectDO, UsageStatus.UPLOADED);
                 objectDO.setUsedTime(LocalDateTime.now());
                 objectDO.setCheckStatus(needCheck ? CheckStatus.CHECKING : CheckStatus.NO_NEED_CHECK);
                 break;
             case PRE_DELETED:
+                objectManager.assertUsageStatus(objectDO, UsageStatus.USED);
                 objectDO.setPreDeletedTime(LocalDateTime.now());
+                break;
             default:
                 throw new IllegalArgumentException("不支持的使用状态<%s>".formatted(status));
         }
+        objectDO.setUsageStatus(status);
         objectManager.updateById(objectDO);
         log.debug("修改资源对象的使用状态成功，id<%s>，status<%s>".formatted(objectDO.getId(), status));
     }
