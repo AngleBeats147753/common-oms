@@ -63,8 +63,8 @@ public class ObjectDO implements Serializable {
     /**
      * 是否已使用
      */
-    @TableField("used")
-    private UsageStatus usage_status;
+    @TableField("usage_status")
+    private UsageStatus usageStatus;
 
     /**
      * 审核状态（0-未审核,1-审核中,2-审核未通过,3-审核通过,4-无需审核）

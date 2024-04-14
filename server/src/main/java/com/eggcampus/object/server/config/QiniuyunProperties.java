@@ -36,7 +36,7 @@ public class QiniuyunProperties implements InitializingBean {
     /**
      * 回调地址的域名
      */
-    private String domainOfCallback;
+    private String ossCallbackDomain;
 
     /**
      * 存储空间所在的区域

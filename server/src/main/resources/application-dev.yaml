@@ -1,8 +1,8 @@
 spring:
   datasource:
     driver-class-name: com.p6spy.engine.spy.P6SpyDriver
-    url: jdbc:p6spy:mysql://100.64.0.2:10000/common-image-dev
-    username: common-image-dev
+    url: jdbc:p6spy:mysql://100.64.0.2:10000/common-oms-dev
+    username: common-oms-dev
     password: AhJckjVnWgB0wb1
 qiniuyun:
   access-key: TY6utcq7Koaf9jcsfn7riNg5VKQbvowoUZXTyvZv
@@ -10,4 +10,4 @@ qiniuyun:
   bucket: eggcampus-test
   domain-of-bucket: test.img.eggcampus.com
   image-size-limit: 2MB
-  domain-of-callback: dev.oms-server.eggcampus.com
+  oss-callback-domain: https://dev.oms-server.eggcampus.com

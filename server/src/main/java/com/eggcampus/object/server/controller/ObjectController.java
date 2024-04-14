@@ -1,5 +1,7 @@
 package com.eggcampus.object.server.controller;
 
+import cn.hutool.extra.servlet.ServletUtil;
+import com.eggcampus.object.pojo.UploadTokenDTO;
 import com.eggcampus.object.server.pojo.qo.*;
 import com.eggcampus.object.server.service.ObjectService;
 import com.eggcampus.util.result.ReturnResult;
@@ -7,6 +9,8 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
+import java.io.IOException;
 
 import static com.eggcampus.object.server.pojo.ObjectDO.CheckStatus.CHECK_FAILED;
 import static com.eggcampus.object.server.pojo.ObjectDO.CheckStatus.CHECK_SUCCESS;
@@ -22,7 +26,8 @@ public class ObjectController {
 
     @PostMapping("/image/upload-token")
     public ReturnResult uploadToken(@Validated @RequestBody UploadTokenGenerationQO qo) {
-        return objectService.generateUploadToken(qo);
+        UploadTokenDTO uploadToken = objectService.generateUploadToken(qo);
+        return ReturnResult.getSuccessReturn(uploadToken);
     }
 
     @PutMapping("/object/use")
@@ -58,4 +63,10 @@ public class ObjectController {
         objectService.deleteObjectList(deleteQO.getDeleteQoList());
         return ReturnResult.getSuccessReturn("删除对象列表成功");
     }
+
+    @PostMapping(ObjectService.OSS_CALLBACK_PATH)
+    public String ossCallback(HttpServletRequest request) {
+        return objectService.handleOssCallback(request);
+    }
+
 }
