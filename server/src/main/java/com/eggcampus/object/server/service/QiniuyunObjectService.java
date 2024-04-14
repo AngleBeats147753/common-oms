@@ -2,14 +2,14 @@ package com.eggcampus.object.server.service;
 
 import cn.hutool.core.net.url.UrlBuilder;
 import cn.hutool.core.util.URLUtil;
-import com.eggcampus.object.enums.CheckStatus;
-import com.eggcampus.object.enums.ObjectTypeEnum;
 import com.eggcampus.object.pojo.UploadTokenDTO;
 import com.eggcampus.object.server.config.QiniuyunProperties;
 import com.eggcampus.object.server.manager.ApplicationManager;
 import com.eggcampus.object.server.manager.ObjectManager;
 import com.eggcampus.object.server.pojo.ApplicationDO;
 import com.eggcampus.object.server.pojo.ObjectDO;
+import com.eggcampus.object.server.pojo.ObjectDO.CheckStatus;
+import com.eggcampus.object.server.pojo.ObjectDO.UsageStatus;
 import com.eggcampus.object.server.pojo.qo.CheckStatusModificationQO;
 import com.eggcampus.object.server.pojo.qo.DeleteQO;
 import com.eggcampus.object.server.pojo.qo.UploadTokenGenerationQO;
@@ -97,8 +97,8 @@ public class QiniuyunObjectService implements ObjectService, InitializingBean {
     private void saveImageDO(Long applicationId, String url) {
         ObjectDO objectDO = new ObjectDO();
         objectDO.setUrl(url);
-        objectDO.setUsed(false);
-        objectDO.setObjectTypeEnum(ObjectTypeEnum.IMAGE);
+        objectDO.setUsage_status(UsageStatus.GENERATED);
+        objectDO.setType(ObjectDO.Type.IMAGE);
         objectDO.setCheckStatus(CheckStatus.UNCHECKED);
         objectDO.setApplicationId(applicationId);
         objectManager.save(objectDO);
@@ -110,10 +110,10 @@ public class QiniuyunObjectService implements ObjectService, InitializingBean {
         if (objectDO == null) {
             throw new NotFoundException("资源对象不存在，url<%s>".formatted(qo.getImageURL()));
         }
-        if (objectDO.getUsed()) {
+        if (UsageStatus.USED.equals(objectDO.getUsage_status())) {
             throw new EggCampusException(AliErrorCode.USER_ERROR_A0402, "资源对象已使用");
         }
-        objectDO.setUsed(true);
+        objectDO.setUsage_status(UsageStatus.USED);
         objectDO.setUsedTime(LocalDateTime.now());
         objectDO.setCheckStatus(qo.getNeedCheck() ? CheckStatus.CHECKING : CheckStatus.NO_NEED_CHECK);
         objectManager.updateById(objectDO);

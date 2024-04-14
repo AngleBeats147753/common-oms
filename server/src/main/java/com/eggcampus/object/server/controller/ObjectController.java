@@ -8,8 +8,8 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 
-import static com.eggcampus.object.enums.CheckStatus.CHECK_FAILED;
-import static com.eggcampus.object.enums.CheckStatus.CHECK_SUCCESS;
+import static com.eggcampus.object.server.pojo.ObjectDO.CheckStatus.CHECK_FAILED;
+import static com.eggcampus.object.server.pojo.ObjectDO.CheckStatus.CHECK_SUCCESS;
 import static com.eggcampus.util.result.AliErrorCode.USER_ERROR_A0402;
 
 /**

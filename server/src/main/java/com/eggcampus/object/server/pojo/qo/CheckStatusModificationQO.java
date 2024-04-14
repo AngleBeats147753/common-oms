@@ -1,6 +1,6 @@
 package com.eggcampus.object.server.pojo.qo;
 
-import com.eggcampus.object.enums.CheckStatus;
+import com.eggcampus.object.server.pojo.ObjectDO;
 import lombok.Data;
 
 import javax.validation.constraints.NotEmpty;
@@ -15,5 +15,5 @@ public class CheckStatusModificationQO {
     private String imageURL;
 
     @NotNull(message = "checkStatus不能为null")
-    private CheckStatus checkStatus;
+    private ObjectDO.CheckStatus checkStatus;
 }
