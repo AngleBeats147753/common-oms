@@ -2,7 +2,7 @@ server:
   port: 9904
 spring:
   application:
-    name: 'common-object'
+    name: 'common-oms'
   profiles:
     active: dev
   cloud:
