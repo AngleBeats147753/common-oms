@@ -22,7 +22,11 @@ public class ObjectManagerImpl extends VersionServiceImpl<ObjectDao, ObjectDO> i
 
     @Override
     public ObjectDO findByURL(String url) {
-        return getByURL(url);
+        ObjectDO objectDO = getByURL(url);
+        if (objectDO == null) {
+            throw new NotFoundException("对象不存在，url<%s>".formatted(url));
+        }
+        return objectDO;
     }
 
     @Override
@@ -44,8 +48,8 @@ public class ObjectManagerImpl extends VersionServiceImpl<ObjectDao, ObjectDO> i
     @Override
     public void assertUsageStatusByURL(String url, ObjectDO.UsageStatus usageStatus) {
         ObjectDO objectDO = findByURL(url);
-        if (!ObjectDO.UsageStatus.GENERATED.equals(objectDO.getUsageStatus())) {
-            throw new IllegalArgumentException("对象状态不正确，url<%s>，usageStatus<%s>".formatted(url, objectDO.getUsageStatus()));
+        if (!objectDO.getUsageStatus().equals(usageStatus)) {
+            throw new IllegalArgumentException("对象状态不正确，id<%s>，期望usageStatus<%s>，当前usageStatus<%s>".formatted(objectDO.getId(), usageStatus, objectDO.getUsageStatus()));
         }
     }
 }

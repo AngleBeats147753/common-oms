@@ -111,16 +111,8 @@ public class QiniuyunObjectService implements ObjectService, InitializingBean {
     @Override
     public void use(UsageQO qo) {
         ObjectDO objectDO = objectManager.findByURL(qo.getImageURL());
-        if (objectDO == null) {
-            throw new NotFoundException("资源对象不存在，url<%s>".formatted(qo.getImageURL()));
-        }
-        if (UsageStatus.USED.equals(objectDO.getUsageStatus())) {
-            throw new EggCampusException(AliErrorCode.USER_ERROR_A0402, "资源对象已使用");
-        }
-        objectDO.setUsageStatus(UsageStatus.USED);
-        objectDO.setUsedTime(LocalDateTime.now());
-        objectDO.setCheckStatus(qo.getNeedCheck() ? CheckStatus.CHECKING : CheckStatus.NO_NEED_CHECK);
-        objectManager.updateById(objectDO);
+        objectManager.assertUsageStatusByURL(qo.getImageURL(), UsageStatus.UPLOADED);
+        modifyUsageStatus(objectDO, UsageStatus.USED, false);
     }
 
     @Override
@@ -205,6 +197,10 @@ public class QiniuyunObjectService implements ObjectService, InitializingBean {
 
     private void modifyUsageStatus(String url, UsageStatus status) {
         ObjectDO objectDO = objectManager.findByURL(url);
+        modifyUsageStatus(objectDO, status, null);
+    }
+
+    private void modifyUsageStatus(ObjectDO objectDO, UsageStatus status, Boolean needCheck) {
         objectDO.setUsageStatus(status);
         switch (status) {
             case UPLOADED:
@@ -212,6 +208,7 @@ public class QiniuyunObjectService implements ObjectService, InitializingBean {
                 break;
             case USED:
                 objectDO.setUsedTime(LocalDateTime.now());
+                objectDO.setCheckStatus(needCheck ? CheckStatus.CHECKING : CheckStatus.NO_NEED_CHECK);
                 break;
             case PRE_DELETED:
                 objectDO.setPreDeletedTime(LocalDateTime.now());
@@ -219,6 +216,6 @@ public class QiniuyunObjectService implements ObjectService, InitializingBean {
                 throw new IllegalArgumentException("不支持的使用状态<%s>".formatted(status));
         }
         objectManager.updateById(objectDO);
-        log.debug("修改资源对象的使用状态成功，url<%s>，status<%s>".formatted(url, status));
+        log.debug("修改资源对象的使用状态成功，id<%s>，status<%s>".formatted(objectDO.getId(), status));
     }
 }
