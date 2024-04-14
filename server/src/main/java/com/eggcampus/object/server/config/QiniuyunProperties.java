@@ -33,6 +33,10 @@ public class QiniuyunProperties implements InitializingBean {
      * 存储空间对应的域名
      */
     private String domainOfBucket;
+    /**
+     * 回调地址的域名
+     */
+    private String domainOfCallback;
 
     /**
      * 存储空间所在的区域

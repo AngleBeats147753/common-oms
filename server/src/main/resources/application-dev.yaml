@@ -7,6 +7,7 @@ spring:
 qiniuyun:
   access-key: TY6utcq7Koaf9jcsfn7riNg5VKQbvowoUZXTyvZv
   secret-key: 33tE5JHA9b6ytwABXnnloVrGiUhoEHktVa6Ye-NB
-  bucket: common-eggcampus
-  domain-of-bucket: img.test.eggcampus.com
+  bucket: eggcampus-test
+  domain-of-bucket: test.img.eggcampus.com
   image-size-limit: 2MB
+  domain-of-callback: dev.oms-server.eggcampus.com
