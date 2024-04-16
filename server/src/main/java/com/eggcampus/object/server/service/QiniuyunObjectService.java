@@ -69,7 +69,7 @@ public class QiniuyunObjectService implements ObjectService, InitializingBean {
         String url = getURL(path);
         objectManager.assertNonExistenceByURL(url);
 
-        StringMap uploadPolicy = createImageUploadPolicy(url);
+        StringMap uploadPolicy = createImageUploadPolicy(path, url);
         saveImage(application.getId(), url);
         String token = auth.uploadToken(properties.getBucket(), path, properties.getUploadExpireSecond(), uploadPolicy);
         return new UploadTokenDTO(path, token, url);
@@ -84,11 +84,13 @@ public class QiniuyunObjectService implements ObjectService, InitializingBean {
                 .build();
     }
 
-    private StringMap createImageUploadPolicy(String url) {
+    private StringMap createImageUploadPolicy(String key, String url) {
         StringMap policy = new StringMap();
         policy.put("insertOnly", 1);
         policy.put("mimeLimit", "image/*");
         policy.put("fsizeLimit", properties.getFileSizeLimit().toBytes());
+        policy.put("forceSaveKey", true);
+        policy.put("saveKey", key);
         policy.put("callbackUrl", ossCallbackURL);
         policy.put("callbackBodyType", "application/json");
         policy.put("callbackBody", "{\"key\":\"$(key)\",\"hash\":\"$(etag)\",\"%s\":\"%s\"}".formatted(OSS_CALLBACK_BODY_URL_KEY, url));
