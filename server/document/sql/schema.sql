@@ -4,7 +4,7 @@ create table `application`
     id bigint unsigned primary key auto_increment comment 'id',
     name varchar(255) not null comment '应用名称',
     profile varchar(255) not null comment '应用环境',
-    path_prefix varchar(255) not null comment '路径前缀（保存到OSS时的路径前缀）',
+    path_prefix varchar(255) not null comment '路径前缀（保存到OSS时的路径前缀。当OSS为七牛云时，不能以斜杠开头，但必须以斜杠结尾）',
     version bigint unsigned default 0 comment '乐观锁',
     deleted bigint unsigned default 0 comment '逻辑删除（0-未删除，id号-已删除）',
     create_time datetime default current_timestamp comment '创建时间',
@@ -29,6 +29,6 @@ create table `object`
     deleted bigint unsigned default 0 comment '逻辑删除（逻辑删除(0-未删除，id号-已删除)）',
     create_time datetime default current_timestamp comment '创建时间（创建时间）',
     update_time datetime default current_timestamp on update current_timestamp comment '上次修改时间（修改时间）'
-) engine=innodb, character set utf8mb4, comment '图像';
+) engine=innodb, character set utf8mb4, comment '对象';
 create unique index idx_url on `object` (deleted,url);
 
