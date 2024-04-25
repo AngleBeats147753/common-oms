@@ -15,7 +15,8 @@
     <!-- 父项目的artifactId请固定为parent -->
     <artifactId>parent</artifactId>
     <packaging>pom</packaging>
-    <version>1.1-SNAPSHOT</version>
+    <version>0.2.1-SNAPSHOT</version>
+
     <modules>
         <module>server</module>
         <module>client</module>
@@ -34,7 +35,7 @@
         <spring-cloud.version>2021.0.7</spring-cloud.version>
         <mybatis.plus.version>3.5.3.1</mybatis.plus.version>
         <eggcampus.common.util.version>0.1-SNAPSHOT</eggcampus.common.util.version>
-        <eggcampus.image.util.version>1.1-SNAPSHOT</eggcampus.image.util.version>
+        <eggcampus.image.util.version>0.2.1-SNAPSHOT</eggcampus.image.util.version>
     </properties>
     <!-- 设置依赖管理，在这里定义过的dependency，在使用时只需指定groupId和artifactId就好了，省去指定版本等标签 -->
     <!-- 注意1：子项目会继承父项目的dependencyManagement，所以不要重复设置 -->
