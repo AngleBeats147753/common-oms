@@ -4,7 +4,7 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
         <artifactId>parent</artifactId>
-        <groupId>com.eggcampus.image</groupId>
+        <groupId>com.eggcampus.oms</groupId>
         <version>0.2.1-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
@@ -14,7 +14,33 @@
     <properties>
         <!-- 由于server服务不需要部署到maven来供其他项目使用，所以这里设置跳过部署 -->
         <maven.deploy.skip>true</maven.deploy.skip>
+
+        <spring.boot.version>2.7.14</spring.boot.version>
+        <spring-cloud.version>2021.0.7</spring-cloud.version>
+        <mybatis.plus.version>3.5.3.1</mybatis.plus.version>
+        <eggcampus.util.base.version>0.2.1-SNAPSHOT</eggcampus.util.base.version>
+        <eggcampus.util.springboot.version>0.2.1-SNAPSHOT</eggcampus.util.springboot.version>
     </properties>
+
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-dependencies</artifactId>
+                <version>${spring.boot.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>org.springframework.cloud</groupId>
+                <artifactId>spring-cloud-dependencies</artifactId>
+                <version>${spring-cloud.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
 
     <dependencies>
         <dependency>
@@ -31,6 +57,11 @@
         <dependency>
             <groupId>org.springframework.cloud</groupId>
             <artifactId>spring-cloud-starter-config</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-aop</artifactId>
         </dependency>
 
         <dependency>
@@ -76,34 +107,24 @@
             <version>3.9.1</version>
         </dependency>
 
-        <dependency>
-            <groupId>com.eggcampus.image</groupId>
-            <artifactId>util</artifactId>
-        </dependency>
-
+        <!--工具-->
         <dependency>
             <groupId>com.eggcampus.util</groupId>
-            <artifactId>common-util</artifactId>
+            <artifactId>util-spring-boot-starter</artifactId>
+            <version>0.2.1-SNAPSHOT</version>
         </dependency>
 
         <dependency>
             <groupId>cn.hutool</groupId>
             <artifactId>hutool-all</artifactId>
         </dependency>
-
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-aop</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>cn.hutool</groupId>
-            <artifactId>hutool-json</artifactId>
-        </dependency>
     </dependencies>
+
     <build>
         <!-- 设置生成的jar包固定为application，这样不需要修改Dockerfile了 -->
         <finalName>application</finalName>
-        <!-- 设置插件。 -->
+
+        <!-- 设置插件-->
         <plugins>
             <plugin>
                 <groupId>org.springframework.boot</groupId>

@@ -4,14 +4,7 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <!-- 假如创建的项目是一个Springboot项目，那么要加上这个parent标签。假如不是Springboot项目，就不需要加parent标签 -->
-    <parent>
-        <groupId>org.springframework.boot</groupId>
-        <artifactId>spring-boot-starter-parent</artifactId>
-        <version>2.7.14</version>
-    </parent>
-
-    <groupId>com.eggcampus.image</groupId>
+    <groupId>com.eggcampus.oms</groupId>
     <!-- 父项目的artifactId请固定为parent -->
     <artifactId>parent</artifactId>
     <packaging>pom</packaging>
@@ -19,9 +12,6 @@
 
     <modules>
         <module>server</module>
-        <module>client</module>
-        <module>util</module>
-        <module>client-springboot</module>
     </modules>
 
     <properties>
@@ -29,14 +19,12 @@
         <maven.compiler.source>17</maven.compiler.source>
         <maven.compiler.target>17</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <spring.boot.version>2.7.14</spring.boot.version>
+
+        <lombok.version>1.18.28</lombok.version>
         <hutool.version>5.8.25</hutool.version>
-        <!-- 在有server子项目的时候，spring-cloud.version是必须的 -->
-        <spring-cloud.version>2021.0.7</spring-cloud.version>
-        <mybatis.plus.version>3.5.3.1</mybatis.plus.version>
-        <eggcampus.common.util.version>0.1-SNAPSHOT</eggcampus.common.util.version>
-        <eggcampus.image.util.version>0.2.1-SNAPSHOT</eggcampus.image.util.version>
+        <junit-jupiter.version>5.8.2</junit-jupiter.version>
     </properties>
+
     <!-- 设置依赖管理，在这里定义过的dependency，在使用时只需指定groupId和artifactId就好了，省去指定版本等标签 -->
     <!-- 注意1：子项目会继承父项目的dependencyManagement，所以不要重复设置 -->
     <dependencyManagement>
@@ -57,24 +45,6 @@
                 <scope>test</scope>
             </dependency>
 
-            <!-- 在有server子项目的时候，spring-cloud-dependencies是必须的 -->
-            <dependency>
-                <groupId>org.springframework.cloud</groupId>
-                <artifactId>spring-cloud-dependencies</artifactId>
-                <version>${spring-cloud.version}</version>
-                <type>pom</type>
-                <scope>import</scope>
-            </dependency>
-
-            <!-- 原依赖 -->
-            <dependency>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-dependencies</artifactId>
-                <version>${spring.boot.version}</version>
-                <type>pom</type>
-                <scope>import</scope>
-            </dependency>
-
             <dependency>
                 <groupId>cn.hutool</groupId>
                 <artifactId>hutool-bom</artifactId>
@@ -87,24 +57,6 @@
                 <groupId>cn.hutool</groupId>
                 <artifactId>hutool-all</artifactId>
                 <version>${hutool.version}</version>
-            </dependency>
-
-            <dependency>
-                <groupId>com.baomidou</groupId>
-                <artifactId>mybatis-plus-boot-starter</artifactId>
-                <version>${mybatis.plus.version}</version>
-            </dependency>
-
-            <dependency>
-                <groupId>com.eggcampus.util</groupId>
-                <artifactId>common-util</artifactId>
-                <version>${eggcampus.common.util.version}</version>
-            </dependency>
-
-            <dependency>
-                <groupId>com.eggcampus.image</groupId>
-                <artifactId>util</artifactId>
-                <version>${eggcampus.image.util.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
