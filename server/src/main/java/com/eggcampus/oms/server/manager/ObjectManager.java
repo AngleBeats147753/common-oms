@@ -5,6 +5,8 @@ import com.eggcampus.oms.server.pojo.ObjectDO;
 import com.eggcampus.oms.server.pojo.ObjectDO.CheckStatus;
 import com.eggcampus.oms.server.pojo.ObjectDO.UsageStatus;
 
+import java.util.List;
+
 /**
  * @author 黄磊
  */
@@ -21,9 +23,19 @@ public interface ObjectManager extends IService<ObjectDO> {
      * 通过url获取资源对象
      *
      * @param url url
-     * @return {@link ObjectDO}
+     * @return 资源对象
+     * @throws com.eggcampus.util.exception.database.NotFoundException 未找到资源对象时抛出这个异常
      */
     ObjectDO findByURL(String url);
+
+    /**
+     * 通过一组url获取一组资源对象
+     *
+     * @param urls 一组url
+     * @return 资源对象
+     * @throws com.eggcampus.util.exception.database.NotFoundException 有资源对象未找到时抛出这个异常
+     */
+    List<ObjectDO> listByURL(List<String> urls);
 
     /**
      * 通过URL断言资源对象不存在

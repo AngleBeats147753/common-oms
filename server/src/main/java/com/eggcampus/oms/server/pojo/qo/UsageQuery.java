@@ -9,9 +9,9 @@ import javax.validation.constraints.NotNull;
  * @author 黄磊
  */
 @Data
-public class UsageQO {
-    @NotEmpty(message = "imageURL不能为null或者空字符串")
-    private String imageURL;
+public class UsageQuery {
+    @NotEmpty(message = "objectUrl不能为null或者空字符串")
+    private String objectUrl;
 
     @NotNull(message = "needCheck不能为null")
     private Boolean needCheck;

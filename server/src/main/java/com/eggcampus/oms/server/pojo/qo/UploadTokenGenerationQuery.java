@@ -13,7 +13,7 @@ import javax.validation.constraints.Pattern;
  * @author 黄磊
  */
 @Data
-public class UploadTokenGenerationQO {
+public class UploadTokenGenerationQuery {
     @NotNull(message = "application不能为null")
     private ApplicationDTO application;
 

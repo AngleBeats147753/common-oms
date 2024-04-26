@@ -13,5 +13,5 @@ import java.util.List;
 public class BatchUsageQO {
 
     @NotNull
-    private List<UsageQO> usageQoList;
+    private List<UsageQuery> usageQueryList;
 }

@@ -79,7 +79,7 @@ public class ObjectDO implements Serializable {
     /**
      * 使用时间
      */
-    @TableField("used_time")
+    @TableField(value = "used_time", updateStrategy = FieldStrategy.IGNORED)
     private LocalDateTime usedTime;
 
     /**
@@ -91,7 +91,7 @@ public class ObjectDO implements Serializable {
     /**
      * 待删除时间
      */
-    @TableField("pre_deleted_time")
+    @TableField(value = "pre_deleted_time", updateStrategy = FieldStrategy.IGNORED)
     private LocalDateTime preDeletedTime;
 
     /**

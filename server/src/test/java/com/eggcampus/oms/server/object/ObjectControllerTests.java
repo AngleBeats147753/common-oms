@@ -19,7 +19,6 @@ public class ObjectControllerTests {
     @Test
     @DisplayName("生成上传凭证")
     void test_generateUploadToken() {
-
     }
 
     @Test

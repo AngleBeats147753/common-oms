@@ -6,8 +6,12 @@ import com.eggcampus.oms.server.dao.ObjectDao;
 import com.eggcampus.oms.server.manager.ObjectManager;
 import com.eggcampus.oms.server.pojo.ObjectDO;
 import com.eggcampus.util.exception.database.NotFoundException;
+import com.eggcampus.util.exception.result.NonLoggingManagerException;
+import com.eggcampus.util.result.AliErrorCode;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 import static com.eggcampus.oms.server.pojo.ObjectDO.*;
 
@@ -32,6 +36,11 @@ public class ObjectManagerImpl extends EggCampusServiceImpl<ObjectDao, ObjectDO>
     }
 
     @Override
+    public List<ObjectDO> listByURL(List<String> urls) {
+        return query().in(URL, urls).list();
+    }
+
+    @Override
     public void assertNonExistenceByURL(String url) {
         ObjectDO objectDO = getByURL(url);
         if (objectDO != null) {
@@ -50,7 +59,7 @@ public class ObjectManagerImpl extends EggCampusServiceImpl<ObjectDao, ObjectDO>
     @Override
     public void assertUsageStatus(ObjectDO objectDO, UsageStatus usageStatus) {
         if (!objectDO.getUsageStatus().equals(usageStatus)) {
-            throw new IllegalArgumentException("对象使用状态不正确，id<%s>，期望usageStatus<%s>，当前usageStatus<%s>".formatted(objectDO.getId(), usageStatus, objectDO.getUsageStatus()));
+            throw new NonLoggingManagerException(AliErrorCode.USER_ERROR_A0402, "对象使用状态不正确，id<%s>，期望usageStatus<%s>，当前usageStatus<%s>".formatted(objectDO.getId(), usageStatus, objectDO.getUsageStatus()));
         }
     }
 
@@ -64,7 +73,7 @@ public class ObjectManagerImpl extends EggCampusServiceImpl<ObjectDao, ObjectDO>
     public void assertCheckStatusByURL(String url, CheckStatus checkStatus) {
         ObjectDO objectDO = findByURL(url);
         if (!objectDO.getCheckStatus().equals(checkStatus)) {
-            throw new IllegalArgumentException("对象审核状态不正确，id<%s>，期望usageStatus<%s>，当前usageStatus<%s>".formatted(objectDO.getId(), checkStatus, objectDO.getCheckStatus()));
+            throw new NonLoggingManagerException(AliErrorCode.USER_ERROR_A0402, "对象审核状态不正确，id<%s>，期望usageStatus<%s>，当前usageStatus<%s>".formatted(objectDO.getId(), checkStatus, objectDO.getCheckStatus()));
         }
     }
 }

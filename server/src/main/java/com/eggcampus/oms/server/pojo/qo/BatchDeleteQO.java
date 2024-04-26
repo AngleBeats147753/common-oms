@@ -13,5 +13,5 @@ import java.util.List;
 public class BatchDeleteQO {
 
     @NotEmpty
-    private List<DeleteQO> deleteQoList;
+    private List<DeleteQuery> deleteQueryList;
 }
