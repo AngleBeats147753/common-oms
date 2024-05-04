@@ -50,16 +50,6 @@ public class ObjectController {
         return ReturnResult.getSuccessReturn("使用资源成功");
     }
 
-    @Log("取消使用资源")
-    @PutMapping("/object/cancel-use")
-    public ReturnResult cancelUsageObject(@Validated @RequestBody List<String> urls) {
-        if (urls.isEmpty()) {
-            return ReturnResult.getFailureReturn(AliErrorCode.USER_ERROR_A0400, "取消使用资源的数量不能为0");
-        }
-        objectService.cancelUse(urls);
-        return ReturnResult.getSuccessReturn("取消使用资源成功");
-    }
-
     @Log("删除资源")
     @DeleteMapping("/object/delete")
     public ReturnResult delete(@Validated @RequestBody List<String> urls) {
@@ -68,16 +58,6 @@ public class ObjectController {
         }
         objectService.deleteTemporarily(urls);
         return ReturnResult.getSuccessReturn("删除资源成功");
-    }
-
-    @Log("取消删除资源")
-    @PutMapping("/object/cancel-deletion")
-    public ReturnResult cancelDeletion(@Validated @RequestBody List<String> urls) {
-        if (urls.isEmpty()) {
-            return ReturnResult.getFailureReturn(AliErrorCode.USER_ERROR_A0400, "取消删除资源的数量不能为0");
-        }
-        objectService.cancelTemporaryDeletion(urls);
-        return ReturnResult.getSuccessReturn("取消删除对象成功");
     }
 
     @Log("更改审核状态")
