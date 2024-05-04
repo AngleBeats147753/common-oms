@@ -22,6 +22,7 @@ import com.qiniu.http.Headers;
 import com.qiniu.storage.BucketManager;
 import com.qiniu.util.Auth;
 import com.qiniu.util.StringMap;
+import io.seata.spring.annotation.GlobalTransactional;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -65,6 +66,7 @@ public class QiniuyunObjectService implements ObjectService {
     }
 
     @Override
+    @GlobalTransactional(name = "生成图像的上传凭证")
     public UploadTokenDTO generateImageUploadToken(UploadTokenGenerationQuery query) {
         ApplicationDO application = applicationService.findApplication(query.getApplication());
         String path = application.getPathPrefix() + query.getImageName();
@@ -74,7 +76,7 @@ public class QiniuyunObjectService implements ObjectService {
         StringMap uploadPolicy = createImageUploadPolicy(path, url);
         saveObject(application.getId(), url);
         String token = auth.uploadToken(properties.getBucket(), path, properties.getUploadExpireSecond(), uploadPolicy);
-        log.info("成功生成图像上传凭证，url<%s>".formatted(url));
+        log.info("生成图像上传凭证，url<%s>".formatted(url));
         return new UploadTokenDTO(path, token, url);
     }
 
@@ -150,7 +152,7 @@ public class QiniuyunObjectService implements ObjectService {
     }
 
     @Override
-    @Transactional
+    @GlobalTransactional(name = "使用资源")
     public void use(List<UsageQuery> queries) {
         List<String> urls = queries.stream().map(UsageQuery::getObjectUrl).toList();
         List<ObjectDO> objectDOS = objectManager.listByURL(urls);
@@ -184,7 +186,7 @@ public class QiniuyunObjectService implements ObjectService {
     }
 
     @Override
-    @Transactional
+    @GlobalTransactional(name = "删除资源-临时")
     public void deleteTemporarily(List<String> urls) {
         List<ObjectDO> objectDOS = objectManager.listByURL(urls);
 
@@ -215,7 +217,7 @@ public class QiniuyunObjectService implements ObjectService {
     }
 
     @Override
-    @Transactional
+    @GlobalTransactional(name = "删除资源-永久")
     public void deletePermanently(List<String> urls) {
         for (String url : urls) {
             String key = URLUtil.getPath(url).substring(1);
@@ -238,7 +240,7 @@ public class QiniuyunObjectService implements ObjectService {
     }
 
     @Override
-    @Transactional
+    @GlobalTransactional(name = "修改审核状态")
     public void modifyCheckStatus(ModifyCheckStatusQuery query) {
         ObjectDO objectDO = objectManager.findByURL(query.getImageUrl());
         if (ObjectDO.CheckStatus.NO_NEED_CHECK.equals(objectDO.getCheckStatus())) {

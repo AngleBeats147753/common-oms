@@ -89,13 +89,4 @@ public class ObjectController {
         objectService.modifyCheckStatus(qo);
         return ReturnResult.getSuccessReturn("更改图像审核状态成功");
     }
-
-    @PutMapping("/object/aaa")
-    public ReturnResult aaa(@Validated @RequestBody List<String> urls) {
-        if (urls.isEmpty()) {
-            return ReturnResult.getFailureReturn(AliErrorCode.USER_ERROR_A0400, "取消删除资源的数量不能为0");
-        }
-        objectService.deletePermanently(urls);
-        return ReturnResult.getSuccessReturn("取消删除对象成功");
-    }
 }

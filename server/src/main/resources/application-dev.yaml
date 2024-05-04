@@ -11,3 +11,11 @@ qiniuyun:
   domain-of-bucket: test.img.eggcampus.com
   image-size-limit: 2MB
   oss-callback-domain: https://dev.oms-server.eggcampus.com
+seata:
+  application-id: common-oms
+  tx-service-group: default
+  service:
+    vgroup-mapping:
+      default: default
+    grouplist:
+      default: 100.64.0.2:10002
