@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.core.toolkit.Constants;
 import com.baomidou.mybatisplus.extension.plugins.inner.InnerInterceptor;
 import com.eggcampus.oms.api.pojo.qo.UsageQuery;
+import com.eggcampus.util.base.ReflectUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.ibatis.executor.Executor;
 import org.apache.ibatis.mapping.MappedStatement;
@@ -67,12 +68,12 @@ public class OmsInnerInterceptor implements InnerInterceptor {
 
     private Object getId(Object et) {
         try {
-            List<Field> fields = BeanUtil.getFieldByAnnotation(et.getClass(), TableId.class);
+            List<Field> fields = ReflectUtil.getFieldByAnnotation(et.getClass(), TableId.class);
             if (!fields.isEmpty()) {
                 return fields.get(0).get(et);
             }
 
-            Field field = BeanUtil.getFieldByName(et.getClass(), "id");
+            Field field = ReflectUtil.getFieldByName(et.getClass(), "id");
             if (field == null) {
                 throw new NotProcessException("没有找到id字段");
             }
@@ -83,7 +84,7 @@ public class OmsInnerInterceptor implements InnerInterceptor {
     }
 
     private void insert(Object et) {
-        List<Field> fields = BeanUtil.getFieldByAnnotation(et.getClass(), OmsResource.class);
+        List<Field> fields = ReflectUtil.getFieldByAnnotation(et.getClass(), OmsResource.class);
         if (fields.isEmpty()) {
             return;
         }
@@ -98,7 +99,7 @@ public class OmsInnerInterceptor implements InnerInterceptor {
     }
 
     private void update(Executor executor, MappedStatement ms, Object et) {
-        List<Field> fields = BeanUtil.getFieldByAnnotation(et.getClass(), OmsResource.class);
+        List<Field> fields = ReflectUtil.getFieldByAnnotation(et.getClass(), OmsResource.class);
         if (fields.isEmpty()) {
             return;
         }
@@ -117,7 +118,7 @@ public class OmsInnerInterceptor implements InnerInterceptor {
 
     private void delete(Executor executor, MappedStatement ms, Object id) {
         Object oldEntity = getOldEntity(executor, ms, id);
-        List<Field> fields = BeanUtil.getFieldByAnnotation(oldEntity.getClass(), OmsResource.class);
+        List<Field> fields = ReflectUtil.getFieldByAnnotation(oldEntity.getClass(), OmsResource.class);
         if (fields.isEmpty()) {
             return;
         }
