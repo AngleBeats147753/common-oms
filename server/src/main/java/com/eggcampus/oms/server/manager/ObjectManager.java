@@ -1,9 +1,9 @@
 package com.eggcampus.oms.server.manager;
 
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.eggcampus.oms.server.pojo.ObjectDO;
-import com.eggcampus.oms.server.pojo.ObjectDO.CheckStatus;
-import com.eggcampus.oms.server.pojo.ObjectDO.UsageStatus;
+import com.eggcampus.oms.api.pojo.ObjectDO;
+import com.eggcampus.oms.api.pojo.ObjectDO.CheckStatus;
+import com.eggcampus.oms.api.pojo.ObjectDO.UsageStatus;
 
 import java.util.List;
 

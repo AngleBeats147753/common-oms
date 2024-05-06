@@ -3,7 +3,7 @@
 <mapper namespace="com.eggcampus.oms.server.dao.ApplicationDao">
 
     <!-- 通用查询映射结果 -->
-    <resultMap id="BaseResultMap" type="com.eggcampus.oms.server.pojo.ApplicationDO">
+    <resultMap id="BaseResultMap" type="com.eggcampus.oms.api.pojo.ApplicationDO">
         <id column="id" property="id" />
         <result column="name" property="name" />
         <result column="profile" property="profile" />

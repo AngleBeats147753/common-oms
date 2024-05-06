@@ -8,13 +8,13 @@ import cn.hutool.extra.servlet.ServletUtil;
 import cn.hutool.json.JSONUtil;
 import com.eggcampus.oms.server.config.QiniuyunProperties;
 import com.eggcampus.oms.server.manager.ObjectManager;
-import com.eggcampus.oms.server.pojo.ApplicationDO;
-import com.eggcampus.oms.server.pojo.ObjectDO;
-import com.eggcampus.oms.server.pojo.ObjectDO.UsageStatus;
-import com.eggcampus.oms.server.pojo.dto.UploadTokenDTO;
-import com.eggcampus.oms.server.pojo.qo.ModifyCheckStatusQuery;
-import com.eggcampus.oms.server.pojo.qo.UploadTokenGenerationQuery;
-import com.eggcampus.oms.server.pojo.qo.UsageQuery;
+import com.eggcampus.oms.api.pojo.ApplicationDO;
+import com.eggcampus.oms.api.pojo.ObjectDO;
+import com.eggcampus.oms.api.pojo.ObjectDO.UsageStatus;
+import com.eggcampus.oms.api.pojo.dto.UploadTokenDTO;
+import com.eggcampus.oms.api.pojo.qo.ModifyCheckStatusQuery;
+import com.eggcampus.oms.api.pojo.qo.UploadTokenGenerationQuery;
+import com.eggcampus.oms.api.pojo.qo.UsageQuery;
 import com.eggcampus.util.exception.result.ServiceException;
 import com.eggcampus.util.result.AliErrorCode;
 import com.qiniu.common.QiniuException;
@@ -108,7 +108,7 @@ public class QiniuyunObjectService implements ObjectService {
         objectDO.setUsageStatus(UsageStatus.GENERATED);
         objectDO.setGeneratedTime(LocalDateTime.now());
         objectDO.setType(ObjectDO.Type.IMAGE);
-        objectDO.setCheckStatus(ObjectDO.CheckStatus.UNCHECKED);
+        objectDO.setCheckStatus(ObjectDO.CheckStatus.UNKNOWN);
         objectDO.setApplicationId(applicationId);
         objectManager.save(objectDO);
     }
@@ -179,7 +179,7 @@ public class QiniuyunObjectService implements ObjectService {
             objectManager.assertUsageStatus(objectDO, UsageStatus.USED);
             objectDO.setUsageStatus(UsageStatus.UPLOADED);
             objectDO.setUsedTime(null);
-            objectDO.setCheckStatus(ObjectDO.CheckStatus.UNCHECKED);
+            objectDO.setCheckStatus(ObjectDO.CheckStatus.UNKNOWN);
         }
         objectManager.updateBatchById(objectDOS);
         log.info("取消使用资源成功，urls<%s>".formatted(urls));

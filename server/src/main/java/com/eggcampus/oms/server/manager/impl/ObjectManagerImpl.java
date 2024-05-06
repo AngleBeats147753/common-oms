@@ -4,7 +4,7 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.campus.util.springboot.mybatisplus.EggCampusServiceImpl;
 import com.eggcampus.oms.server.dao.ObjectDao;
 import com.eggcampus.oms.server.manager.ObjectManager;
-import com.eggcampus.oms.server.pojo.ObjectDO;
+import com.eggcampus.oms.api.pojo.ObjectDO;
 import com.eggcampus.util.exception.database.NotFoundException;
 import com.eggcampus.util.exception.result.NonLoggingManagerException;
 import com.eggcampus.util.result.AliErrorCode;
@@ -13,7 +13,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-import static com.eggcampus.oms.server.pojo.ObjectDO.*;
+import static com.eggcampus.oms.api.pojo.ObjectDO.*;
 
 /**
  * @author 黄磊

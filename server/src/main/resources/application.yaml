@@ -8,6 +8,7 @@ spring:
   cloud:
     config:
       enabled: false
+
 logging:
   pattern:
     level: '%5p [%X{traceId}]'

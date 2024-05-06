@@ -1,34 +1,38 @@
 package com.eggcampus.oms.server.controller;
 
 import com.campus.util.springboot.log.Log;
-import com.eggcampus.oms.server.pojo.dto.UploadTokenDTO;
-import com.eggcampus.oms.server.pojo.qo.ModifyCheckStatusQuery;
-import com.eggcampus.oms.server.pojo.qo.UploadTokenGenerationQuery;
-import com.eggcampus.oms.server.pojo.qo.UsageQuery;
+import com.eggcampus.oms.api.pojo.dto.UploadTokenDTO;
+import com.eggcampus.oms.api.pojo.qo.ModifyCheckStatusQuery;
+import com.eggcampus.oms.api.pojo.qo.UploadTokenGenerationQuery;
+import com.eggcampus.oms.api.pojo.qo.UsageQuery;
+import com.eggcampus.oms.api.manager.OmsFeignManager;
 import com.eggcampus.oms.server.service.ObjectService;
 import com.eggcampus.util.result.AliErrorCode;
 import com.eggcampus.util.result.ReturnResult;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
-import static com.eggcampus.oms.server.pojo.ObjectDO.CheckStatus.CHECK_FAILED;
-import static com.eggcampus.oms.server.pojo.ObjectDO.CheckStatus.CHECK_SUCCESS;
+import static com.eggcampus.oms.api.pojo.ObjectDO.CheckStatus.CHECK_FAILED;
+import static com.eggcampus.oms.api.pojo.ObjectDO.CheckStatus.CHECK_SUCCESS;
 import static com.eggcampus.util.result.AliErrorCode.USER_ERROR_A0402;
 
 /**
  * @author 黄磊
  */
 @RestController
-public class ObjectController {
+public class ObjectController implements OmsFeignManager {
     @Resource
     private ObjectService objectService;
 
     @Log("生成图像的上传凭证")
-    @PostMapping("/image/upload-token")
+    @Override
     public ReturnResult generateUploadToken(@Validated @RequestBody UploadTokenGenerationQuery qo) {
         UploadTokenDTO uploadToken = objectService.generateImageUploadToken(qo);
         return ReturnResult.getSuccessReturn(uploadToken);
@@ -40,8 +44,9 @@ public class ObjectController {
         return objectService.handleOssCallback(request);
     }
 
+
     @Log("使用资源")
-    @PutMapping("/object/use")
+    @Override
     public ReturnResult use(@Validated @RequestBody List<UsageQuery> queries) {
         if (queries.isEmpty()) {
             return ReturnResult.getFailureReturn(AliErrorCode.USER_ERROR_A0400, "使用资源的数量不能为0");
@@ -51,7 +56,7 @@ public class ObjectController {
     }
 
     @Log("删除资源")
-    @DeleteMapping("/object/delete")
+    @Override
     public ReturnResult delete(@Validated @RequestBody List<String> urls) {
         if (urls.isEmpty()) {
             return ReturnResult.getFailureReturn(AliErrorCode.USER_ERROR_A0400, "删除资源的数量不能为0");

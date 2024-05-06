@@ -2,11 +2,10 @@ package com.eggcampus.oms.server.manager.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.campus.util.springboot.mybatisplus.EggCampusServiceImpl;
+import com.eggcampus.oms.api.pojo.ApplicationDO;
 import com.eggcampus.oms.server.dao.ApplicationDao;
 import com.eggcampus.oms.server.manager.ApplicationManager;
-import com.eggcampus.oms.server.pojo.ApplicationDO;
 import com.eggcampus.util.exception.database.NotFoundException;
-import lombok.NonNull;
 import org.springframework.stereotype.Service;
 
 /**
@@ -15,18 +14,19 @@ import org.springframework.stereotype.Service;
 @Service
 public class ApplicationManagerImpl extends EggCampusServiceImpl<ApplicationDao, ApplicationDO> implements ApplicationManager {
     @Override
-    public ApplicationDO getByNameAndProfile(String name, String profile) {
+    public ApplicationDO getByNameAndProfile(String projectName, String serviceName, String profile) {
         QueryWrapper<ApplicationDO> wrapper = new QueryWrapper<ApplicationDO>()
-                .eq(ApplicationDO.NAME, name)
+                .eq(ApplicationDO.PROJECT_NAME, projectName)
+                .eq(ApplicationDO.SERVICE_NAME, serviceName)
                 .eq(ApplicationDO.PROFILE, profile);
         return getOne(wrapper);
     }
 
     @Override
-    public ApplicationDO findByNameAndProfile(@NonNull String name, @NonNull String profile) {
-        ApplicationDO applicationDO = getByNameAndProfile(name, profile);
+    public ApplicationDO findByNameAndProfile(String projectName, String serviceName, String profile) {
+        ApplicationDO applicationDO = getByNameAndProfile(projectName, serviceName, profile);
         if (applicationDO == null) {
-            throw new NotFoundException("应用不存在，name<%s>, profile<%s>".formatted(name, profile));
+            throw new NotFoundException("应用不存在，projectName<%s>，serviceName<%s> ，profile<%s>".formatted(projectName, serviceName, profile));
         }
         return applicationDO;
     }

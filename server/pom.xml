@@ -14,33 +14,7 @@
     <properties>
         <!-- 由于server服务不需要部署到maven来供其他项目使用，所以这里设置跳过部署 -->
         <maven.deploy.skip>true</maven.deploy.skip>
-
-        <spring.boot.version>2.7.14</spring.boot.version>
-        <spring-cloud.version>2021.0.7</spring-cloud.version>
-        <mybatis.plus.version>3.5.3.1</mybatis.plus.version>
-        <eggcampus.util.base.version>0.2.1-SNAPSHOT</eggcampus.util.base.version>
-        <eggcampus.util.springboot.version>0.2.1-SNAPSHOT</eggcampus.util.springboot.version>
     </properties>
-
-    <dependencyManagement>
-        <dependencies>
-            <dependency>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-dependencies</artifactId>
-                <version>${spring.boot.version}</version>
-                <type>pom</type>
-                <scope>import</scope>
-            </dependency>
-
-            <dependency>
-                <groupId>org.springframework.cloud</groupId>
-                <artifactId>spring-cloud-dependencies</artifactId>
-                <version>${spring-cloud.version}</version>
-                <type>pom</type>
-                <scope>import</scope>
-            </dependency>
-        </dependencies>
-    </dependencyManagement>
 
     <dependencies>
         <dependency>
@@ -73,7 +47,6 @@
         <dependency>
             <groupId>com.qiniu</groupId>
             <artifactId>qiniu-java-sdk</artifactId>
-            <version>7.14.0</version>
         </dependency>
 
         <!--关系型数据库-->
@@ -84,34 +57,33 @@
         <dependency>
             <groupId>com.baomidou</groupId>
             <artifactId>mybatis-plus-boot-starter</artifactId>
-            <version>${mybatis.plus.version}</version>
         </dependency>
         <dependency>
             <groupId>com.baomidou</groupId>
             <artifactId>mybatis-plus-boot-starter-test</artifactId>
-            <version>${mybatis.plus.version}</version>
         </dependency>
         <dependency>
             <groupId>com.baomidou</groupId>
             <artifactId>mybatis-plus-generator</artifactId>
-            <version>${mybatis.plus.version}</version>
         </dependency>
         <dependency>
             <groupId>org.apache.velocity</groupId>
             <artifactId>velocity-engine-core</artifactId>
-            <version>2.2</version>
         </dependency>
         <dependency>
             <groupId>p6spy</groupId>
             <artifactId>p6spy</artifactId>
-            <version>3.9.1</version>
         </dependency>
 
         <!--工具-->
         <dependency>
+            <groupId>com.eggcampus.oms</groupId>
+            <artifactId>api</artifactId>
+        </dependency>
+
+        <dependency>
             <groupId>com.eggcampus.util</groupId>
             <artifactId>util-spring-boot-starter</artifactId>
-            <version>0.2.1-SNAPSHOT</version>
         </dependency>
 
         <dependency>
@@ -127,7 +99,6 @@
         <dependency>
             <groupId>io.seata</groupId>
             <artifactId>seata-spring-boot-starter</artifactId>
-            <version>1.8.0</version>
         </dependency>
     </dependencies>
 
@@ -140,7 +111,7 @@
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
-                <version>2.7.14</version>
+                <version>${spring-boot-maven-plugin.version}</version>
                 <configuration>
                     <excludes>
                         <exclude>
@@ -154,7 +125,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-source-plugin</artifactId>
-                <version>3.2.1</version>
+                <version>${maven-source-plugin.version}</version>
                 <executions>
                     <execution>
                         <id>attach-sources</id>

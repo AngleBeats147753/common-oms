@@ -1,6 +1,6 @@
 package com.eggcampus.oms.server.dao;
 
-import com.eggcampus.oms.server.pojo.ApplicationDO;
+import com.eggcampus.oms.api.pojo.ApplicationDO;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import org.apache.ibatis.annotations.Mapper;
 

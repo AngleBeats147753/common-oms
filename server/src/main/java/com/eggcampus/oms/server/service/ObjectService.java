@@ -1,9 +1,9 @@
 package com.eggcampus.oms.server.service;
 
-import com.eggcampus.oms.server.pojo.dto.UploadTokenDTO;
-import com.eggcampus.oms.server.pojo.qo.ModifyCheckStatusQuery;
-import com.eggcampus.oms.server.pojo.qo.UploadTokenGenerationQuery;
-import com.eggcampus.oms.server.pojo.qo.UsageQuery;
+import com.eggcampus.oms.api.pojo.dto.UploadTokenDTO;
+import com.eggcampus.oms.api.pojo.qo.ModifyCheckStatusQuery;
+import com.eggcampus.oms.api.pojo.qo.UploadTokenGenerationQuery;
+import com.eggcampus.oms.api.pojo.qo.UsageQuery;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;

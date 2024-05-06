@@ -12,6 +12,8 @@
 
     <modules>
         <module>server</module>
+        <module>client-spring-boot-starter</module>
+        <module>api</module>
     </modules>
 
     <properties>
@@ -20,9 +22,18 @@
         <maven.compiler.target>17</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
-        <lombok.version>1.18.28</lombok.version>
+        <spring-boot.version>2.7.14</spring-boot.version>
+        <spring-cloud.version>2021.0.7</spring-cloud.version>
+        <spring-boot-maven-plugin.version>2.7.14</spring-boot-maven-plugin.version>
+        <maven-source-plugin.version>3.2.1</maven-source-plugin.version>
+        <mybatis-plus.version>3.5.3.1</mybatis-plus.version>
+        <eggcampus-util-base.version>0.2.1-SNAPSHOT</eggcampus-util-base.version>
+        <eggcampus-util-springboot.version>0.2.1-SNAPSHOT</eggcampus-util-springboot.version>
         <hutool.version>5.8.25</hutool.version>
-        <junit-jupiter.version>5.8.2</junit-jupiter.version>
+        <seata.version>1.8.0</seata.version>
+        <qiniu.version>7.14.0</qiniu.version>
+
+        <eggcampus-oms-api.version>0.2.1-SNAPSHOT</eggcampus-oms-api.version>
     </properties>
 
     <!-- 设置依赖管理，在这里定义过的dependency，在使用时只需指定groupId和artifactId就好了，省去指定版本等标签 -->
@@ -30,19 +41,19 @@
     <dependencyManagement>
         <dependencies>
             <dependency>
-                <groupId>org.projectlombok</groupId>
-                <artifactId>lombok</artifactId>
-                <!-- 注意：lombok.version是继承自spring-boot-starter-parent的 -->
-                <version>${lombok.version}</version>
-                <scope>provided</scope>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-dependencies</artifactId>
+                <version>${spring-boot.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
             </dependency>
 
             <dependency>
-                <groupId>org.junit.jupiter</groupId>
-                <artifactId>junit-jupiter-api</artifactId>
-                <!-- 注意：junit-jupiter.version是继承自spring-boot-starter-parent的 -->
-                <version>${junit-jupiter.version}</version>
-                <scope>test</scope>
+                <groupId>org.springframework.cloud</groupId>
+                <artifactId>spring-cloud-dependencies</artifactId>
+                <version>${spring-cloud.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
             </dependency>
 
             <dependency>
@@ -57,6 +68,64 @@
                 <groupId>cn.hutool</groupId>
                 <artifactId>hutool-all</artifactId>
                 <version>${hutool.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.eggcampus.oms</groupId>
+                <artifactId>api</artifactId>
+                <version>${eggcampus-oms-api.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.eggcampus.util</groupId>
+                <artifactId>util-spring-boot-starter</artifactId>
+                <version>${eggcampus-util-springboot.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>io.seata</groupId>
+                <artifactId>seata-spring-boot-starter</artifactId>
+                <version>${seata.version}</version>
+            </dependency>
+
+            <!--对象存储-->
+            <dependency>
+                <groupId>com.qiniu</groupId>
+                <artifactId>qiniu-java-sdk</artifactId>
+                <version>${qiniu.version}</version>
+            </dependency>
+
+            <!--Mybatis Plus-->
+            <dependency>
+                <groupId>com.baomidou</groupId>
+                <artifactId>mybatis-plus</artifactId>
+                <version>${mybatis-plus.version}</version>
+                <scope>compile</scope>
+            </dependency>
+            <dependency>
+                <groupId>com.baomidou</groupId>
+                <artifactId>mybatis-plus-boot-starter</artifactId>
+                <version>${mybatis-plus.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.baomidou</groupId>
+                <artifactId>mybatis-plus-boot-starter-test</artifactId>
+                <version>${mybatis-plus.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.baomidou</groupId>
+                <artifactId>mybatis-plus-generator</artifactId>
+                <version>${mybatis-plus.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.velocity</groupId>
+                <artifactId>velocity-engine-core</artifactId>
+                <version>2.2</version>
+            </dependency>
+            <dependency>
+                <groupId>p6spy</groupId>
+                <artifactId>p6spy</artifactId>
+                <version>3.9.1</version>
             </dependency>
         </dependencies>
     </dependencyManagement>

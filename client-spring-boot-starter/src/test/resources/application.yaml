@@ -1,0 +1,26 @@
+server:
+  port: 9904
+spring:
+  application:
+    name: hl
+  profiles:
+    active: dev
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    username: root
+    password: 123456
+    url: jdbc:mysql://127.0.0.1:3306/demo-mybatis-plus
+seata:
+  application-id: common-oms
+  tx-service-group: default
+  service:
+    vgroup-mapping:
+      default: default
+    grouplist:
+      default: 100.64.0.2:10002
+logging:
+  pattern:
+    level: '%5p [%X{traceId}]'
+eggcampus:
+  oms:
+    url: http://localhost:9904
