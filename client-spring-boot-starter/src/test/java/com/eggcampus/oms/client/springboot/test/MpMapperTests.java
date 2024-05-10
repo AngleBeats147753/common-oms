@@ -391,7 +391,7 @@ public class MpMapperTests {
     }
 
     public HashMap<String, Object> prepare_deleteByIdLogically2(ArgumentsAccessor args) throws Exception {
-        Path caseDir = baseDir.resolve("deleteByIdLogically2").resolve(args.getString(0));
+        Path caseDir = baseDir.resolve("deleteById2").resolve(args.getString(0));
         // 初始化数据库数据
         TestUtil.initData(caseDir, dataSource);
         // 准备输入参数
