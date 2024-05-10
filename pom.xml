@@ -5,7 +5,6 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.eggcampus.oms</groupId>
-    <!-- 父项目的artifactId请固定为parent -->
     <artifactId>parent</artifactId>
     <packaging>pom</packaging>
     <version>0.2.1-SNAPSHOT</version>
@@ -24,20 +23,18 @@
 
         <spring-boot.version>2.7.14</spring-boot.version>
         <spring-cloud.version>2021.0.7</spring-cloud.version>
-        <spring-boot-maven-plugin.version>2.7.14</spring-boot-maven-plugin.version>
-        <maven-source-plugin.version>3.2.1</maven-source-plugin.version>
         <mybatis-plus.version>3.5.6</mybatis-plus.version>
         <eggcampus-util-base.version>0.2.1-SNAPSHOT</eggcampus-util-base.version>
         <eggcampus-util-springboot.version>0.2.1-SNAPSHOT</eggcampus-util-springboot.version>
-        <hutool.version>5.8.25</hutool.version>
+        <eggcampus-oms-api.version>0.2.1-SNAPSHOT</eggcampus-oms-api.version>
+        <hutool.version>5.8.27</hutool.version>
         <seata.version>1.8.0</seata.version>
         <qiniu.version>7.14.0</qiniu.version>
 
-        <eggcampus-oms-api.version>0.2.1-SNAPSHOT</eggcampus-oms-api.version>
+        <spring-boot-maven-plugin.version>2.7.14</spring-boot-maven-plugin.version>
+        <maven-source-plugin.version>3.2.1</maven-source-plugin.version>
     </properties>
 
-    <!-- 设置依赖管理，在这里定义过的dependency，在使用时只需指定groupId和artifactId就好了，省去指定版本等标签 -->
-    <!-- 注意1：子项目会继承父项目的dependencyManagement，所以不要重复设置 -->
     <dependencyManagement>
         <dependencies>
             <dependency>
@@ -130,9 +127,6 @@
         </dependencies>
     </dependencyManagement>
 
-    <!-- 设置依赖 -->
-    <!-- 注意1：子项目会继承父项目的dependencies，所以不要重复设置。这里相当于所有子项目中默认都加了lombok、junit -->
-    <!-- 注意2：父项目的dependencies通常仅设置lombok、junit就好，其他的在子项目中设置 -->
     <dependencies>
         <dependency>
             <groupId>org.projectlombok</groupId>
@@ -147,7 +141,6 @@
 
     <distributionManagement>
         <repository>
-            <!--必须与 settings.xml 的 id 一致-->
             <id>eggcampus-backend-public-server-default-maven</id>
             <name>default-maven</name>
             <url>https://eggcampus-maven.pkg.coding.net/repository/backend-public-server/default-maven/</url>

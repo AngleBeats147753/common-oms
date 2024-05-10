@@ -4,7 +4,6 @@ import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.json.JSONObject;
 import com.eggcampus.oms.client.springboot.EnableOms;
 import com.eggcampus.oms.client.springboot.OmsManager;
-import com.eggcampus.oms.client.springboot.test.dao.UserMapper;
 import com.eggcampus.oms.client.springboot.test.manager.LogicDeletionUserManager;
 import com.eggcampus.oms.client.springboot.test.manager.UserManager;
 import com.eggcampus.oms.client.springboot.test.pojo.User;
@@ -24,6 +23,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.sql.SQLException;
 import java.util.HashMap;
+import java.util.List;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doNothing;
@@ -32,6 +32,7 @@ import static org.mockito.Mockito.verify;
 /**
  * @author 黄磊
  */
+@SuppressWarnings("unchecked")
 @EnableOms
 @SpringBootTest(classes = TestMain.class)
 public class MpManagerTests {
@@ -93,7 +94,7 @@ public class MpManagerTests {
 
     public void compare_updateById(Object gt) {
         JSONObject gtObject = (JSONObject) gt;
-        verify(omsManager).change(gtObject.getStr("oldUrls"), gtObject.getStr("newUrls"));
+        verify(omsManager).change(gtObject.getBeanList("oldUrls", String.class), gtObject.getBeanList("newUrls", String.class));
     }
 
     @Transactional
@@ -157,7 +158,7 @@ public class MpManagerTests {
         // 准备输入参数
         JSONObject param = TestUtil.getInputParam(caseDir);
         // 准备gt
-        JSONObject gt = TestUtil.getGt(caseDir);
+        List<String> gt = TestUtil.getGts(caseDir, String.class);
         // 准备异常
         Class<?> exception = TestUtil.getException(args.getString(2));
 
@@ -178,8 +179,8 @@ public class MpManagerTests {
     }
 
     public void compare_removeById(Object gt) {
-        JSONObject gtObject = (JSONObject) gt;
-        verify(omsManager).delete(gtObject.getStr("oldUrls"));
+        List<String> gtObject = (List<String>) gt;
+        verify(omsManager).delete(gtObject);
     }
 
     @Transactional
@@ -201,7 +202,7 @@ public class MpManagerTests {
         // 准备输入参数
         JSONObject param = TestUtil.getInputParam(caseDir);
         // 准备gt
-        JSONObject gt = TestUtil.getGt(caseDir);
+        List<String> gt = TestUtil.getGts(caseDir, String.class);
         // 准备异常
         Class<?> exception = TestUtil.getException(args.getString(2));
 
@@ -222,7 +223,7 @@ public class MpManagerTests {
     }
 
     public void compare_removeByIdLogically(Object gt) {
-        JSONObject gtObject = (JSONObject) gt;
-        verify(omsManager).delete(gtObject.getStr("oldUrls"));
+        List<String> gtObject = (List<String>) gt;
+        verify(omsManager).delete(gtObject);
     }
 }
