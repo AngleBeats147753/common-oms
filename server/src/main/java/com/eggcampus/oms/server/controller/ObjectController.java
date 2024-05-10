@@ -1,27 +1,21 @@
 package com.eggcampus.oms.server.controller;
 
 import com.campus.util.springboot.log.Log;
-import com.eggcampus.oms.api.pojo.dto.UploadTokenDTO;
-import com.eggcampus.oms.api.pojo.qo.ModifyCheckStatusQuery;
-import com.eggcampus.oms.api.pojo.qo.UploadTokenGenerationQuery;
-import com.eggcampus.oms.api.pojo.qo.UsageQuery;
 import com.eggcampus.oms.api.manager.OmsFeignManager;
+import com.eggcampus.oms.api.pojo.dto.UploadTokenDTO;
+import com.eggcampus.oms.api.pojo.qo.DeletionQuery;
+import com.eggcampus.oms.api.pojo.qo.UploadTokenGenerationQuery;
 import com.eggcampus.oms.server.service.ObjectService;
 import com.eggcampus.util.result.AliErrorCode;
 import com.eggcampus.util.result.ReturnResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
-import java.util.List;
-
-import static com.eggcampus.oms.api.pojo.ObjectDO.CheckStatus.CHECK_FAILED;
-import static com.eggcampus.oms.api.pojo.ObjectDO.CheckStatus.CHECK_SUCCESS;
-import static com.eggcampus.util.result.AliErrorCode.USER_ERROR_A0402;
+import java.util.Set;
 
 /**
  * @author 黄磊
@@ -47,31 +41,21 @@ public class ObjectController implements OmsFeignManager {
 
     @Log("使用资源")
     @Override
-    public ReturnResult use(@Validated @RequestBody List<UsageQuery> queries) {
-        if (queries.isEmpty()) {
+    public ReturnResult use(@RequestBody Set<String> urls) {
+        if (urls.isEmpty()) {
             return ReturnResult.getFailureReturn(AliErrorCode.USER_ERROR_A0400, "使用资源的数量不能为0");
         }
-        objectService.use(queries);
+        objectService.use(urls);
         return ReturnResult.getSuccessReturn("使用资源成功");
     }
 
     @Log("删除资源")
     @Override
-    public ReturnResult delete(@Validated @RequestBody List<String> urls) {
-        if (urls.isEmpty()) {
+    public ReturnResult delete(@RequestBody Set<DeletionQuery> queries) {
+        if (queries.isEmpty()) {
             return ReturnResult.getFailureReturn(AliErrorCode.USER_ERROR_A0400, "删除资源的数量不能为0");
         }
-        objectService.deleteTemporarily(urls);
+        objectService.deleteTemporarily(queries);
         return ReturnResult.getSuccessReturn("删除资源成功");
-    }
-
-    @Log("更改审核状态")
-    @PutMapping("/object/status")
-    public ReturnResult checkObject(@Validated @RequestBody ModifyCheckStatusQuery qo) {
-        if (!CHECK_FAILED.equals(qo.getCheckStatus()) && !CHECK_SUCCESS.equals(qo.getCheckStatus())) {
-            return ReturnResult.getFailureReturn(USER_ERROR_A0402, "审核状态不能为<%s>".formatted(qo.getCheckStatus().getName()));
-        }
-        objectService.modifyCheckStatus(qo);
-        return ReturnResult.getSuccessReturn("更改图像审核状态成功");
     }
 }

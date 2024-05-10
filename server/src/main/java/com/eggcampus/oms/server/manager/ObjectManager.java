@@ -2,7 +2,6 @@ package com.eggcampus.oms.server.manager;
 
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.eggcampus.oms.api.pojo.ObjectDO;
-import com.eggcampus.oms.api.pojo.ObjectDO.CheckStatus;
 import com.eggcampus.oms.api.pojo.ObjectDO.UsageStatus;
 
 import java.util.List;
@@ -33,7 +32,6 @@ public interface ObjectManager extends IService<ObjectDO> {
      *
      * @param urls 一组url
      * @return 资源对象
-     * @throws com.eggcampus.util.exception.database.NotFoundException 有资源对象未找到时抛出这个异常
      */
     List<ObjectDO> listByURL(List<String> urls);
 
@@ -66,12 +64,4 @@ public interface ObjectManager extends IService<ObjectDO> {
      * @param usageStatus 使用状态
      */
     void assertUsageStatusByURL(String url, UsageStatus usageStatus);
-
-    /**
-     * 通过URL断言资源对象的审核状态
-     *
-     * @param url         url
-     * @param checkStatus 审核状态
-     */
-    void assertCheckStatusByURL(String url, CheckStatus checkStatus);
 }

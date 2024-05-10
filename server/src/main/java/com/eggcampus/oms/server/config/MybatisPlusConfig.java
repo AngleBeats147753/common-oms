@@ -4,7 +4,7 @@ import com.baomidou.mybatisplus.annotation.DbType;
 import com.baomidou.mybatisplus.extension.plugins.MybatisPlusInterceptor;
 import com.baomidou.mybatisplus.extension.plugins.inner.OptimisticLockerInnerInterceptor;
 import com.baomidou.mybatisplus.extension.plugins.inner.PaginationInnerInterceptor;
-import com.campus.util.springboot.mybatisplus.EnableMybatisPlus;
+import com.campus.util.springboot.mybatisplus.EnableEggCampusMybatisPlus;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -14,7 +14,7 @@ import org.springframework.context.annotation.Configuration;
  * @author 黄磊
  **/
 @Configuration
-@EnableMybatisPlus
+@EnableEggCampusMybatisPlus
 public class MybatisPlusConfig {
 
     /**

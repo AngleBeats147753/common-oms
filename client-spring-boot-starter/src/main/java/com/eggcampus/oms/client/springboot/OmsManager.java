@@ -1,7 +1,7 @@
 package com.eggcampus.oms.client.springboot;
 
 import com.eggcampus.oms.api.pojo.dto.UploadTokenDTO;
-import com.eggcampus.oms.api.pojo.qo.UsageQuery;
+import com.eggcampus.oms.api.pojo.qo.DeletionQuery;
 
 import java.util.List;
 
@@ -20,23 +20,30 @@ public interface OmsManager {
     /**
      * 使用资源
      *
-     * @param query 使用资源的查询对象
+     * @param urls 资源urls
      */
-    void use(UsageQuery query);
+    void use(String urls);
 
     /**
      * 使用资源
      *
-     * @param queries 使用资源的查询对象
+     * @param urls 资源urls
      */
-    void use(List<UsageQuery> queries);
+    void use(List<String> urls);
 
     /**
      * 删除资源
      *
-     * @param url 资源的URL
+     * @param urls 资源的URLs
      */
-    void delete(String url);
+    void delete(String urls);
+
+    /**
+     * 删除资源
+     *
+     * @param query 删除信息
+     */
+    void WithReason(DeletionQuery query);
 
     /**
      * 删除资源
@@ -44,6 +51,13 @@ public interface OmsManager {
      * @param urls 资源的URL
      */
     void delete(List<String> urls);
+
+    /**
+     * 删除资源
+     *
+     * @param queries 删除信息
+     */
+    void deleteWithReason(List<DeletionQuery> queries);
 
     /**
      * 修改资源

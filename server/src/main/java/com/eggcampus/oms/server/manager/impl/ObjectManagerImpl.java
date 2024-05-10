@@ -2,9 +2,9 @@ package com.eggcampus.oms.server.manager.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.campus.util.springboot.mybatisplus.EggCampusServiceImpl;
+import com.eggcampus.oms.api.pojo.ObjectDO;
 import com.eggcampus.oms.server.dao.ObjectDao;
 import com.eggcampus.oms.server.manager.ObjectManager;
-import com.eggcampus.oms.api.pojo.ObjectDO;
 import com.eggcampus.util.exception.database.NotFoundException;
 import com.eggcampus.util.exception.result.NonLoggingManagerException;
 import com.eggcampus.util.result.AliErrorCode;
@@ -13,7 +13,8 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-import static com.eggcampus.oms.api.pojo.ObjectDO.*;
+import static com.eggcampus.oms.api.pojo.ObjectDO.URL;
+import static com.eggcampus.oms.api.pojo.ObjectDO.UsageStatus;
 
 /**
  * @author 黄磊
@@ -67,13 +68,5 @@ public class ObjectManagerImpl extends EggCampusServiceImpl<ObjectDao, ObjectDO>
     public void assertUsageStatusByURL(String url, UsageStatus usageStatus) {
         ObjectDO objectDO = findByURL(url);
         assertUsageStatus(objectDO, usageStatus);
-    }
-
-    @Override
-    public void assertCheckStatusByURL(String url, CheckStatus checkStatus) {
-        ObjectDO objectDO = findByURL(url);
-        if (!objectDO.getCheckStatus().equals(checkStatus)) {
-            throw new NonLoggingManagerException(AliErrorCode.USER_ERROR_A0402, "对象审核状态不正确，id<%s>，期望usageStatus<%s>，当前usageStatus<%s>".formatted(objectDO.getId(), checkStatus, objectDO.getCheckStatus()));
-        }
     }
 }

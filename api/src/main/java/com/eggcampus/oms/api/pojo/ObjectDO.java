@@ -31,11 +31,11 @@ public class ObjectDO implements Serializable {
     public static final String TYPE = "type";
     public static final String URL = "url";
     public static final String USAGE_STATUS = "usage_status";
-    public static final String CHECK_STATUS = "check_status";
     public static final String GENERATED_TIME = "generated_time";
     public static final String USED_TIME = "used_time";
     public static final String UPLOADED_TIME = "uploaded_time";
-    public static final String PRE_DELETED_TIME = "pre_deleted_time";
+    public static final String MARKED_DELETION_TIME = "marked_deletion_time";
+    public static final String DELETION_REASON = "deletion_reason";
     public static final String APPLICATION_ID = "application_id";
     public static final String VERSION = "version";
     public static final String DELETED = "deleted";
@@ -65,12 +65,6 @@ public class ObjectDO implements Serializable {
     private UsageStatus usageStatus;
 
     /**
-     * 审核状态（0-未审核,1-审核中,2-审核未通过,3-审核通过,4-无需审核）
-     */
-    @TableField("check_status")
-    private CheckStatus checkStatus;
-
-    /**
      * 生成时间
      */
     @TableField("generated_time")
@@ -91,8 +85,14 @@ public class ObjectDO implements Serializable {
     /**
      * 待删除时间
      */
-    @TableField(value = "pre_deleted_time", updateStrategy = FieldStrategy.IGNORED)
-    private LocalDateTime preDeletedTime;
+    @TableField(value = "marked_deletion_time", updateStrategy = FieldStrategy.IGNORED)
+    private LocalDateTime markedDeletionTime;
+
+    /**
+     * 删除原因
+     */
+    @TableField("deletion_reason")
+    private String deletionReason;
 
     /**
      * 应用id
@@ -135,51 +135,14 @@ public class ObjectDO implements Serializable {
          */
         USED(2, "已使用"),
         /**
-         * 待删除
+         * 已标记删除
          */
-        PRE_DELETED(3, "待删除");
+        MARKED_DELETION(3, "已标记删除");
 
         private final Integer value;
         private final String name;
 
         UsageStatus(Integer value, String name) {
-            this.value = value;
-            this.name = name;
-        }
-    }
-
-    /**
-     * 审核状态
-     */
-    @Getter
-    @JsonDeserialize(using = NamedEnumDeserializer.class)
-    public enum CheckStatus implements BaseEnum<Integer> {
-        /**
-         * 未知
-         */
-        UNKNOWN(0, "未知"),
-        /**
-         * 审核中
-         */
-        CHECKING(1, "审核中"),
-        /**
-         * 审核未通过
-         */
-        CHECK_FAILED(2, "审核未通过"),
-        /**
-         * 审核通过
-         */
-        CHECK_SUCCESS(3, "审核通过"),
-        /**
-         * 无需审核
-         */
-        NO_NEED_CHECK(4, "无需审核");
-
-        private final Integer value;
-        @JsonValue
-        private final String name;
-
-        CheckStatus(Integer value, String name) {
             this.value = value;
             this.name = name;
         }

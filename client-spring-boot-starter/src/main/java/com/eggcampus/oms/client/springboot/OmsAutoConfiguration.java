@@ -2,10 +2,11 @@ package com.eggcampus.oms.client.springboot;
 
 import com.campus.util.springboot.application.EggCampusApplicationManager;
 import com.campus.util.springboot.application.EnableEggCampusApplication;
-import com.campus.util.springboot.feign.EnableFeign;
-import com.campus.util.springboot.seata.EnableSeata;
+import com.campus.util.springboot.feign.EnableEggCampusFeign;
+import com.campus.util.springboot.seata.EnableEggCampusSeata;
 import com.eggcampus.oms.api.manager.OmsFeignManager;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.apache.ibatis.plugin.Interceptor;
 import org.springframework.beans.BeansException;
 import org.springframework.cloud.openfeign.EnableFeignClients;
 import org.springframework.cloud.openfeign.FeignClientBuilder;
@@ -22,8 +23,8 @@ import javax.annotation.Resource;
  * @author 黄磊
  */
 @Configuration
-@EnableFeign
-@EnableSeata
+@EnableEggCampusFeign
+@EnableEggCampusSeata
 @EnableFeignClients
 @EnableEggCampusApplication
 @Import(OmsProperties.class)
@@ -53,6 +54,11 @@ public class OmsAutoConfiguration implements ApplicationContextAware {
 //    public InnerInterceptor omsMybatisInterceptor() {
 //        return new OmsInnerInterceptor(omsManager());
 //    }
+
+    @Bean
+    public Interceptor interceptor() {
+        return new OmsInterceptor(omsManager());
+    }
 
     @Override
     public void setApplicationContext(@NonNull ApplicationContext applicationContext) throws BeansException {
