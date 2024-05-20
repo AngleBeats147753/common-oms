@@ -7,8 +7,8 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
  * @author 黄磊
  */
 @SpringBootApplication
-public class Main {
+public class OmsServerMain {
     public static void main(String[] args) {
-        SpringApplication.run(Main.class, args);
+        SpringApplication.run(OmsServerMain.class, args);
     }
 }
