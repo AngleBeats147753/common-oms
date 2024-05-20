@@ -1,7 +1,7 @@
 spring:
   datasource:
     driver-class-name: com.p6spy.engine.spy.P6SpyDriver
-    url: jdbc:p6spy:mysql://100.64.0.2:10000/common-oms-dev
+    url: jdbc:p6spy:mysql://100.64.0.8:10000/common-oms-dev
     username: common-oms-dev
     password: AhJckjVnWgB0wb1
 qiniuyun:
@@ -18,4 +18,4 @@ seata:
     vgroup-mapping:
       default: default
     grouplist:
-      default: 100.64.0.2:10002
+      default: 100.64.0.8:10002
