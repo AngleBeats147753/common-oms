@@ -15,7 +15,7 @@ public interface OmsManager {
      * @param imageName 图像名称
      * @return 上传凭证
      */
-    UploadTokenDTO generateUploadToken(String imageName);
+    UploadTokenDTO generateImageUploadToken(String imageName);
 
     /**
      * 使用资源

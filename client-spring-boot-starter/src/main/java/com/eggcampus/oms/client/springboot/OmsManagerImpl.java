@@ -32,7 +32,7 @@ public class OmsManagerImpl implements OmsManager {
     }
 
     @Override
-    public UploadTokenDTO generateUploadToken(@NonNull String imageName) {
+    public UploadTokenDTO generateImageUploadToken(@NonNull String imageName) {
         Object data = omsFeignManager.generateUploadToken(new UploadTokenGenerationQuery(applicationManager.getApplication(), imageName)).getData();
         return objectMapper.convertValue(data, UploadTokenDTO.class);
     }
