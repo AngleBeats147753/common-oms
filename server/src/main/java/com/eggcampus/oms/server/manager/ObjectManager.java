@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.extension.service.IService;
 import com.eggcampus.oms.api.pojo.ObjectDO;
 import com.eggcampus.oms.api.pojo.ObjectDO.UsageStatus;
 
+import java.util.Collection;
 import java.util.List;
 
 /**
@@ -33,7 +34,7 @@ public interface ObjectManager extends IService<ObjectDO> {
      * @param urls 一组url
      * @return 资源对象
      */
-    List<ObjectDO> listByURL(List<String> urls);
+    List<ObjectDO> listByURL(Collection<String> urls);
 
     /**
      * 通过URL断言资源对象不存在

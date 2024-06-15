@@ -1,7 +1,6 @@
 package com.eggcampus.oms.server.service;
 
 import com.eggcampus.oms.api.pojo.dto.UploadTokenDTO;
-import com.eggcampus.oms.api.pojo.qo.DeletionQuery;
 import com.eggcampus.oms.api.pojo.qo.UploadTokenGenerationQuery;
 
 import javax.servlet.http.HttpServletRequest;
@@ -40,19 +39,20 @@ public interface ObjectService {
     void use(Set<String> queries);
 
     /**
-     * 临时删除资源对象。临时是指将资源对象的使用状态置为待删除
+     * 删除资源对象
      * <p>
-     * 注意：为了防止审核系统删除资源对象，但是业务系统不知道对象已被删除了的情况。当资源对象的使用状态为待删除或资源对象不存在时，该接口也不会返回错误
+     * 注意1：为了防止审核系统删除资源对象，但是业务系统不知道对象已被删除了的情况。当资源对象的使用状态为待删除或资源对象不存在时，该接口也不会返回错误
+     * 注意2：该方法不会立即删除资源对象
      *
      * @param queries 资源对象url列表
      */
-    void deleteTemporarily(Set<DeletionQuery> queries);
+    void delete(Set<String> queries);
 
 
     /**
-     * 永久删除资源。永久是指删除oss中的资源
+     * 立即删除资源
      *
      * @param urls 资源对象url列表
      */
-    void deletePermanently(Set<String> urls);
+    void deleteImmediately(Set<String> urls);
 }

@@ -31,6 +31,7 @@ public class ObjectDO implements Serializable {
     public static final String TYPE = "type";
     public static final String URL = "url";
     public static final String USAGE_STATUS = "usage_status";
+    public static final String USAGE_NUM = "usage_num";
     public static final String GENERATED_TIME = "generated_time";
     public static final String USED_TIME = "used_time";
     public static final String UPLOADED_TIME = "uploaded_time";
@@ -59,10 +60,16 @@ public class ObjectDO implements Serializable {
     private String url;
 
     /**
-     * 是否已使用
+     * 使用状态
      */
     @TableField("usage_status")
     private UsageStatus usageStatus;
+
+    /**
+     * 使用次数
+     */
+    @TableField("usage_num")
+    private Integer usageNum;
 
     /**
      * 生成时间
@@ -91,7 +98,7 @@ public class ObjectDO implements Serializable {
     /**
      * 删除原因
      */
-    @TableField("deletion_reason")
+    @TableField(value = "deletion_reason", updateStrategy = FieldStrategy.ALWAYS)
     private String deletionReason;
 
     /**
@@ -137,7 +144,11 @@ public class ObjectDO implements Serializable {
         /**
          * 已标记删除
          */
-        MARKED_DELETION(3, "已标记删除");
+        DELETION_MARKED(3, "已标记删除"),
+        /**
+         * 已删除
+         */
+        DELETED(4, "已标记删除");
 
         private final Integer value;
         private final String name;

@@ -6,11 +6,11 @@ import cn.hutool.core.util.StrUtil;
 import cn.hutool.core.util.URLUtil;
 import cn.hutool.extra.servlet.ServletUtil;
 import cn.hutool.json.JSONUtil;
+import com.eggcampus.oms.api.constant.DeletionReason;
 import com.eggcampus.oms.api.pojo.ApplicationDO;
 import com.eggcampus.oms.api.pojo.ObjectDO;
 import com.eggcampus.oms.api.pojo.ObjectDO.UsageStatus;
 import com.eggcampus.oms.api.pojo.dto.UploadTokenDTO;
-import com.eggcampus.oms.api.pojo.qo.DeletionQuery;
 import com.eggcampus.oms.api.pojo.qo.UploadTokenGenerationQuery;
 import com.eggcampus.oms.server.config.QiniuyunProperties;
 import com.eggcampus.oms.server.manager.ObjectManager;
@@ -28,9 +28,7 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.servlet.http.HttpServletRequest;
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 /**
  * @author 黄磊
@@ -108,6 +106,7 @@ public class QiniuyunObjectService implements ObjectService {
         ObjectDO objectDO = new ObjectDO();
         objectDO.setUrl(url);
         objectDO.setUsageStatus(UsageStatus.GENERATED);
+        objectDO.setUsageNum(0);
         objectDO.setGeneratedTime(LocalDateTime.now());
         objectDO.setType(ObjectDO.Type.IMAGE);
         objectDO.setApplicationId(applicationId);
@@ -160,38 +159,57 @@ public class QiniuyunObjectService implements ObjectService {
         assertResourceExistence(urls, objectDOS.stream().map(ObjectDO::getUrl).toList());
 
         for (ObjectDO objectDO : objectDOS) {
-            objectManager.assertUsageStatus(objectDO, UsageStatus.UPLOADED);
-            objectDO.setUsageStatus(UsageStatus.USED);
-            objectDO.setUsedTime(LocalDateTime.now());
+            if (UsageStatus.UPLOADED.equals(objectDO.getUsageStatus())) {
+                objectDO.setUsageStatus(UsageStatus.USED);
+                objectDO.setUsageNum(objectDO.getUsageNum() + 1);
+                objectDO.setUsedTime(LocalDateTime.now());
+            } else if (UsageStatus.USED.equals(objectDO.getUsageStatus())) {
+                objectDO.setUsageNum(objectDO.getUsageNum() + 1);
+            } else if (UsageStatus.DELETION_MARKED.equals(objectDO.getUsageStatus())) {
+                objectDO.setUsageStatus(UsageStatus.USED);
+                objectDO.setUsageNum(objectDO.getUsageNum() + 1);
+                objectDO.setUsedTime(LocalDateTime.now());
+                objectDO.setDeletionReason(null);
+                objectDO.setMarkedDeletionTime(null);
+            } else if (UsageStatus.DELETED.equals(objectDO.getUsageStatus())) {
+                throw new ServiceException(AliErrorCode.USER_ERROR_A0402, "资源已被删除，url<%s>，删除原因<%s>".formatted(objectDO.getUrl(), objectDO.getDeletionReason()));
+            } else {
+                throw new ServiceException(AliErrorCode.USER_ERROR_A0402, "资源状态异常，url<%s>，期望状态<UPLOADED、USED、DELETION_MARKED>，当前状态<%s>".formatted(objectDO.getUrl(), objectDO.getUsageStatus()));
+            }
         }
         objectManager.updateBatchById(objectDOS);
         log.info("使用资源成功，urls<%s>".formatted(urls));
     }
 
     @Override
-    @GlobalTransactional(name = "删除资源-临时")
-    public void deleteTemporarily(Set<DeletionQuery> queries) {
-        List<String> urls = queries.stream().map(DeletionQuery::getObjectUrl).toList();
+    @GlobalTransactional(name = "删除资源")
+    public void delete(Set<String> urls) {
         List<ObjectDO> objectDOS = objectManager.listByURL(urls);
 
-        // 由于有资源可能不存在，无法使用索引来找到删除原因，所以转换为map根据url找删除原因
-        Map<String, String> reasonMap = queries.stream().collect(Collectors.toMap(DeletionQuery::getObjectUrl, DeletionQuery::getDeletionReason));
         for (ObjectDO objectDO : objectDOS) {
-            if (UsageStatus.MARKED_DELETION.equals(objectDO.getUsageStatus())) {
-                continue;
+            if (UsageStatus.USED.equals(objectDO.getUsageStatus())) {
+                objectDO.setUsageNum(objectDO.getUsageNum() - 1);
+                log.info("减少资源使用数，url<%s>，剩余使用数<%d>".formatted(objectDO.getUrl(), objectDO.getUsageNum()));
+                if (objectDO.getUsageNum() == 0) {
+                    objectDO.setUsageStatus(UsageStatus.DELETION_MARKED);
+                    objectDO.setDeletionReason(DeletionReason.BUSINESS_DELETION);
+                    objectDO.setMarkedDeletionTime(LocalDateTime.now());
+                    log.info("标记资源删除，url<%s>".formatted(objectDO.getUrl()));
+                }
+            } else if (UsageStatus.DELETION_MARKED.equals(objectDO.getUsageStatus()) ||
+                    UsageStatus.DELETED.equals(objectDO.getUsageStatus())) {
+                log.warn("正在删除已删除资源，url<%s>，删除原因<%s>".formatted(objectDO.getUrl(), objectDO.getDeletionReason()));
+            } else {
+                throw new ServiceException(AliErrorCode.USER_ERROR_A0402, "资源状态异常，url<%s>，期望状态<UPLOADED、USED、DELETION_MARKED>，当前状态<%s>".formatted(objectDO.getUrl(), objectDO.getUsageStatus()));
             }
-            objectManager.assertUsageStatus(objectDO, UsageStatus.USED);
-            objectDO.setUsageStatus(UsageStatus.MARKED_DELETION);
-            objectDO.setMarkedDeletionTime(LocalDateTime.now());
-            objectDO.setDeletionReason(reasonMap.get(objectDO.getUrl()));
         }
         objectManager.updateBatchById(objectDOS);
         log.info("临时删除资源成功，urls<%s>".formatted(urls));
     }
 
     @Override
-    @GlobalTransactional(name = "删除资源-永久")
-    public void deletePermanently(Set<String> queries) {
+    @GlobalTransactional(name = "立即删除资源")
+    public void deleteImmediately(Set<String> queries) {
         List<String> urls = queries.stream().toList();
         for (String url : urls) {
             String key = URLUtil.getPath(url).substring(1);
@@ -199,7 +217,7 @@ public class QiniuyunObjectService implements ObjectService {
             if (object == null) {
                 continue;
             }
-            if (!UsageStatus.MARKED_DELETION.equals(object.getUsageStatus())) {
+            if (!UsageStatus.DELETION_MARKED.equals(object.getUsageStatus())) {
                 throw new ServiceException(AliErrorCode.USER_ERROR_A0402, "资源的使用状态不是待删除，url<%s>".formatted(url));
             }
             try {

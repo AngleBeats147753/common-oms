@@ -35,9 +35,9 @@ public interface OmsFeignManager {
     /**
      * 删除资源
      *
-     * @param queries 资源的URL
+     * @param urls 资源的URL
      * @return 删除结果
      */
     @DeleteMapping("/object/delete")
-    ReturnResult delete(@RequestBody Set<DeletionQuery> queries);
+    ReturnResult delete(@RequestBody Set<String> urls);
 }

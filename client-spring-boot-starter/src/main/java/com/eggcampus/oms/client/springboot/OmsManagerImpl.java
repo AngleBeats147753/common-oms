@@ -1,19 +1,16 @@
 package com.eggcampus.oms.client.springboot;
 
 import com.campus.util.springboot.application.EggCampusApplicationManager;
-import com.eggcampus.oms.api.constant.DeletionReason;
 import com.eggcampus.oms.api.manager.OmsFeignManager;
 import com.eggcampus.oms.api.pojo.dto.UploadTokenDTO;
-import com.eggcampus.oms.api.pojo.qo.DeletionQuery;
 import com.eggcampus.oms.api.pojo.qo.UploadTokenGenerationQuery;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
-import java.util.stream.Collectors;
 
 /**
  * @author 黄磊
@@ -46,7 +43,7 @@ public class OmsManagerImpl implements OmsManager {
     }
 
     @Override
-    public void use(List<String> urls) {
+    public void use(Collection<String> urls) {
         if (urls == null || urls.isEmpty()) {
             return;
         }
@@ -63,30 +60,12 @@ public class OmsManagerImpl implements OmsManager {
     }
 
     @Override
-    public void delete(List<String> urls) {
+    public void delete(Collection<String> urls) {
         if (urls == null || urls.isEmpty()) {
             return;
         }
-        Set<DeletionQuery> queries = urls.stream().map(url -> new DeletionQuery(url, DeletionReason.BUSINESS_DELETION)).collect(Collectors.toSet());
-        omsFeignManager.delete(queries);
+        omsFeignManager.delete(new HashSet<>(urls));
         log.info("删除资源: {}", urls);
-    }
-
-    @Override
-    public void WithReason(DeletionQuery query) {
-        if (query == null) {
-            return;
-        }
-        deleteWithReason(List.of(query));
-    }
-
-    @Override
-    public void deleteWithReason(List<DeletionQuery> queries) {
-        if (queries == null || queries.isEmpty()) {
-            return;
-        }
-        omsFeignManager.delete(new HashSet<>(queries));
-        log.info("删除资源: {}", queries);
     }
 
     @Override
@@ -97,7 +76,7 @@ public class OmsManagerImpl implements OmsManager {
     }
 
     @Override
-    public void change(List<String> oldUrls, List<String> newUrls) {
+    public void change(Collection<String> oldUrls, Collection<String> newUrls) {
         if (oldUrls == null) {
             oldUrls = List.of();
         }

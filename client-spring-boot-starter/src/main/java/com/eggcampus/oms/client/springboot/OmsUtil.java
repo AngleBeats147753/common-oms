@@ -3,6 +3,7 @@ package com.eggcampus.oms.client.springboot;
 import cn.hutool.core.util.StrUtil;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 /**
@@ -23,7 +24,7 @@ public class OmsUtil {
         return StrUtil.split(str, ",");
     }
 
-    public static ObjectStateTracker compare(List<String> oldObjects, List<String> newObjects) {
+    public static ObjectStateTracker compare(Collection<String> oldObjects, Collection<String> newObjects) {
         List<String> stableObjects = new ArrayList<>();
         List<String> deletedObjects = new ArrayList<>();
         List<String> addedObjects = new ArrayList<>();

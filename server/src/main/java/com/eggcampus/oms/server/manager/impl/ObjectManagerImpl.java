@@ -11,6 +11,7 @@ import com.eggcampus.util.result.AliErrorCode;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.util.Collection;
 import java.util.List;
 
 import static com.eggcampus.oms.api.pojo.ObjectDO.URL;
@@ -37,7 +38,7 @@ public class ObjectManagerImpl extends EggCampusServiceImpl<ObjectDao, ObjectDO>
     }
 
     @Override
-    public List<ObjectDO> listByURL(List<String> urls) {
+    public List<ObjectDO> listByURL(Collection<String> urls) {
         return query().in(URL, urls).list();
     }
 

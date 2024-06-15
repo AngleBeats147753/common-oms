@@ -51,11 +51,11 @@ public class ObjectController implements OmsFeignManager {
 
     @Log("删除资源")
     @Override
-    public ReturnResult delete(@RequestBody Set<DeletionQuery> queries) {
-        if (queries.isEmpty()) {
+    public ReturnResult delete(@RequestBody Set<String> urls) {
+        if (urls.isEmpty()) {
             return ReturnResult.getFailureReturn(AliErrorCode.USER_ERROR_A0400, "删除资源的数量不能为0");
         }
-        objectService.deleteTemporarily(queries);
+        objectService.delete(urls);
         return ReturnResult.getSuccessReturn("删除资源成功");
     }
 }
