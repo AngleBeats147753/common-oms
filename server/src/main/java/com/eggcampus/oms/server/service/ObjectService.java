@@ -1,7 +1,9 @@
 package com.eggcampus.oms.server.service;
 
 import com.eggcampus.oms.api.pojo.dto.UploadTokenDto;
+import com.eggcampus.oms.api.pojo.qo.DeleteObjectQo;
 import com.eggcampus.oms.api.pojo.qo.UploadTokenGenerationQo;
+import com.eggcampus.oms.api.pojo.qo.UseObjectQo;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.Set;
@@ -34,19 +36,19 @@ public interface ObjectService {
     /**
      * 使用资源对象
      *
-     * @param queries 资源对象使用信息所需的数据列表
+     * @param qo 使用资源对象所需要的数据
      */
-    void use(Set<String> queries);
+    void use(UseObjectQo qo);
 
     /**
      * 删除资源对象
      * <p>
-     * 注意1：为了防止审核系统删除资源对象，但是业务系统不知道对象已被删除了的情况。当资源对象的使用状态为待删除或资源对象不存在时，该接口也不会返回错误
+     * 注意1：为了防止审核系统删除资源对象，但是业务系统不知道对象已被删除等情况。当资源对象的使用状态为待删除或资源对象不存在时，该接口也不会返回错误
      * 注意2：该方法不会立即删除资源对象
      *
-     * @param queries 资源对象url列表
+     * @param qo 删除资源对象所需要的数据
      */
-    void delete(Set<String> queries);
+    void delete(DeleteObjectQo qo);
 
 
     /**

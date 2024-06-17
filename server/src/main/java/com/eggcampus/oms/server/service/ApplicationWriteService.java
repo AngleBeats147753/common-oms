@@ -1,9 +1,12 @@
 package com.eggcampus.oms.server.service;
 
+import cn.hutool.core.util.URLUtil;
 import com.eggcampus.oms.api.pojo.ApplicationDo;
 import com.eggcampus.oms.api.pojo.dto.OmsApplicationDto;
 import com.eggcampus.oms.api.pojo.qo.CreateApplicationQo;
 import com.eggcampus.oms.server.manager.ApplicationManager;
+import com.eggcampus.util.exception.result.ServiceException;
+import com.eggcampus.util.result.AliErrorCode;
 import com.eggcampus.util.result.ReturnResult;
 import io.seata.spring.annotation.GlobalTransactional;
 import lombok.extern.slf4j.Slf4j;
@@ -11,6 +14,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
+import java.net.URL;
 
 /**
  * @author 黄磊
@@ -34,5 +38,4 @@ public class ApplicationWriteService {
         log.info("创建应用成功，applicationId<%s>，projectName<%s>，profile<%s>".formatted(application.getId(), application.getProjectName(), application.getProfile()));
         return ReturnResult.getSuccessReturn(new OmsApplicationDto(application));
     }
-
 }

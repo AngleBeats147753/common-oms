@@ -5,8 +5,7 @@ import com.campus.util.springboot.enums.named.NamedEnumDeserializer;
 import com.campus.util.springboot.mybatisplus.BaseEnum;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import lombok.Data;
-import lombok.Getter;
+import lombok.*;
 
 import java.io.Serial;
 import java.io.Serializable;
@@ -20,6 +19,9 @@ import java.io.Serializable;
  * @since 2024-01-28
  */
 @Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 @TableName("application")
 public class ApplicationDo implements Serializable {
 
@@ -86,7 +88,10 @@ public class ApplicationDo implements Serializable {
     @JsonDeserialize(using = NamedEnumDeserializer.class)
     public enum ShareLevel implements BaseEnum<Integer> {
         NONE(0, "不共享"),
-        ALL(1, "全部");
+        /**
+         * 环境级别。可以被其他环境访问
+         */
+        PROFILE(1, "环境");
         private final Integer value;
         private final String name;
 

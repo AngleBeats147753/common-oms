@@ -3,13 +3,14 @@ package com.eggcampus.oms.client.springboot;
 import com.eggcampus.oms.api.manager.OmsFeignManager;
 import com.eggcampus.oms.api.pojo.dto.OmsApplicationDto;
 import com.eggcampus.oms.api.pojo.dto.UploadTokenDto;
+import com.eggcampus.oms.api.pojo.qo.DeleteObjectQo;
 import com.eggcampus.oms.api.pojo.qo.UploadTokenGenerationQo;
+import com.eggcampus.oms.api.pojo.qo.UseObjectQo;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.Collection;
-import java.util.HashSet;
 import java.util.List;
 
 /**
@@ -47,7 +48,8 @@ public class OmsManagerImpl implements OmsManager {
         if (urls == null || urls.isEmpty()) {
             return;
         }
-        omsFeignManager.use(new HashSet<>(urls));
+        UseObjectQo qo = new UseObjectQo(application.getApplicationId(), urls);
+        omsFeignManager.use(qo);
         log.info("使用资源: {}", urls);
     }
 
@@ -64,7 +66,8 @@ public class OmsManagerImpl implements OmsManager {
         if (urls == null || urls.isEmpty()) {
             return;
         }
-        omsFeignManager.delete(new HashSet<>(urls));
+        DeleteObjectQo qo = new DeleteObjectQo(application.getApplicationId(), urls);
+        omsFeignManager.delete(qo);
         log.info("删除资源: {}", urls);
     }
 

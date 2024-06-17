@@ -1,7 +1,10 @@
 package com.eggcampus.oms.api.manager;
 
+import com.eggcampus.oms.api.pojo.qo.DeleteObjectQo;
 import com.eggcampus.oms.api.pojo.qo.UploadTokenGenerationQo;
+import com.eggcampus.oms.api.pojo.qo.UseObjectQo;
 import com.eggcampus.util.result.ReturnResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -25,18 +28,18 @@ public interface OmsFeignManager {
     /**
      * 使用资源
      *
-     * @param urls 使用资源的查询对象
+     * @param qo 使用资源所需的数据
      * @return 使用结果
      */
     @PutMapping("/object/use")
-    ReturnResult use(@RequestBody Set<String> urls);
+    ReturnResult use(@RequestBody UseObjectQo qo);
 
     /**
      * 删除资源
      *
-     * @param urls 资源的URL
+     * @param qo 删除资源所需的数据
      * @return 删除结果
      */
     @DeleteMapping("/object/delete")
-    ReturnResult delete(@RequestBody Set<String> urls);
+    ReturnResult delete(@RequestBody DeleteObjectQo qo);
 }

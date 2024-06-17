@@ -6,8 +6,7 @@ import com.campus.util.springboot.mybatisplus.BaseEnum;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonValue;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import lombok.Data;
-import lombok.Getter;
+import lombok.*;
 
 import java.io.Serial;
 import java.io.Serializable;
@@ -22,6 +21,9 @@ import java.time.LocalDateTime;
  * @since 2024-01-28
  */
 @Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 @TableName("object")
 public class ObjectDo implements Serializable {
 
@@ -124,7 +126,7 @@ public class ObjectDo implements Serializable {
     private Long deleted;
 
     /**
-     * 审核状态
+     * 使用状态
      */
     @Getter
     @JsonDeserialize(using = NamedEnumDeserializer.class)

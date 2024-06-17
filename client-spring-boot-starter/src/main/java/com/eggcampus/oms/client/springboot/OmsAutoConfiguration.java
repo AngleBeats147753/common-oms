@@ -87,7 +87,7 @@ public class OmsAutoConfiguration implements ApplicationContextAware {
         omsApplicationDto.setPathPrefix((String) map.get("pathPrefix"));
         ApplicationDo.ShareLevel shareLevel = switch ((String) map.get("shareLevel")) {
             case "不共享" -> ApplicationDo.ShareLevel.NONE;
-            case "全部" -> ApplicationDo.ShareLevel.ALL;
+            case "环境" -> ApplicationDo.ShareLevel.PROFILE;
             default -> throw new RuntimeException("shareLevel不合法");
         };
         omsApplicationDto.setShareLevel(shareLevel);

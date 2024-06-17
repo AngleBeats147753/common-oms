@@ -3,7 +3,9 @@ package com.eggcampus.oms.server.controller;
 import com.campus.util.springboot.log.Log;
 import com.eggcampus.oms.api.manager.OmsFeignManager;
 import com.eggcampus.oms.api.pojo.dto.UploadTokenDto;
+import com.eggcampus.oms.api.pojo.qo.DeleteObjectQo;
 import com.eggcampus.oms.api.pojo.qo.UploadTokenGenerationQo;
+import com.eggcampus.oms.api.pojo.qo.UseObjectQo;
 import com.eggcampus.oms.server.service.ObjectService;
 import com.eggcampus.util.result.AliErrorCode;
 import com.eggcampus.util.result.ReturnResult;
@@ -40,21 +42,15 @@ public class ObjectController implements OmsFeignManager {
 
     @Log("使用资源")
     @Override
-    public ReturnResult use(@RequestBody Set<String> urls) {
-        if (urls.isEmpty()) {
-            return ReturnResult.getFailureReturn(AliErrorCode.USER_ERROR_A0400, "使用资源的数量不能为0");
-        }
-        objectService.use(urls);
+    public ReturnResult use(@Validated @RequestBody UseObjectQo qo) {
+        objectService.use(qo);
         return ReturnResult.getSuccessReturn("使用资源成功");
     }
 
     @Log("删除资源")
     @Override
-    public ReturnResult delete(@RequestBody Set<String> urls) {
-        if (urls.isEmpty()) {
-            return ReturnResult.getFailureReturn(AliErrorCode.USER_ERROR_A0400, "删除资源的数量不能为0");
-        }
-        objectService.delete(urls);
+    public ReturnResult delete(@Validated @RequestBody DeleteObjectQo qo) {
+        objectService.delete(qo);
         return ReturnResult.getSuccessReturn("删除资源成功");
     }
 }

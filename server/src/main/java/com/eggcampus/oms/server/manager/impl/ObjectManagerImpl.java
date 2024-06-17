@@ -12,6 +12,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
 
 import static com.eggcampus.oms.api.pojo.ObjectDo.URL;
@@ -39,7 +40,7 @@ public class ObjectManagerImpl extends EggCampusServiceImpl<ObjectDao, ObjectDo>
 
     @Override
     public List<ObjectDo> listByURL(Collection<String> urls) {
-        return query().in(URL, urls).list();
+        return query().in(URL, new HashSet<>(urls)).list();
     }
 
     @Override

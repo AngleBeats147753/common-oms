@@ -8,18 +8,24 @@ import cn.hutool.extra.servlet.ServletUtil;
 import cn.hutool.json.JSONUtil;
 import com.eggcampus.oms.api.constant.DeletionReason;
 import com.eggcampus.oms.api.pojo.ApplicationDo;
+import com.eggcampus.oms.api.pojo.ApplicationDo.ShareLevel;
 import com.eggcampus.oms.api.pojo.ObjectDo;
+import com.eggcampus.oms.api.pojo.ObjectDo.Type;
 import com.eggcampus.oms.api.pojo.ObjectDo.UsageStatus;
 import com.eggcampus.oms.api.pojo.dto.UploadTokenDto;
+import com.eggcampus.oms.api.pojo.qo.DeleteObjectQo;
 import com.eggcampus.oms.api.pojo.qo.UploadTokenGenerationQo;
+import com.eggcampus.oms.api.pojo.qo.UseObjectQo;
 import com.eggcampus.oms.server.config.QiniuyunProperties;
 import com.eggcampus.oms.server.manager.ApplicationManager;
 import com.eggcampus.oms.server.manager.ObjectManager;
+import com.eggcampus.oms.server.pojo.dto.ObjectUrlDto;
 import com.eggcampus.util.exception.result.ServiceException;
 import com.eggcampus.util.result.AliErrorCode;
 import com.qiniu.common.QiniuException;
 import com.qiniu.http.Headers;
 import com.qiniu.storage.BucketManager;
+import com.qiniu.storage.model.FileInfo;
 import com.qiniu.util.Auth;
 import com.qiniu.util.StringMap;
 import io.seata.spring.annotation.GlobalTransactional;
@@ -27,9 +33,12 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.servlet.http.HttpServletRequest;
+import java.net.URL;
+import java.time.Instant;
 import java.time.LocalDateTime;
-import java.util.List;
-import java.util.Set;
+import java.time.ZoneId;
+import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * @author 黄磊
@@ -109,7 +118,7 @@ public class QiniuyunObjectService implements ObjectService {
         objectDO.setUsageStatus(UsageStatus.GENERATED);
         objectDO.setUsageNum(0);
         objectDO.setGeneratedTime(LocalDateTime.now());
-        objectDO.setType(ObjectDo.Type.IMAGE);
+        objectDO.setType(Type.IMAGE);
         objectDO.setApplicationId(applicationId);
         objectManager.save(objectDO);
     }
@@ -154,40 +163,144 @@ public class QiniuyunObjectService implements ObjectService {
 
     @Override
     @GlobalTransactional(name = "使用资源")
-    public void use(Set<String> queries) {
-        List<String> urls = queries.stream().toList();
-        List<ObjectDo> objectDos = objectManager.listByURL(urls);
-        assertResourceExistence(urls, objectDos.stream().map(ObjectDo::getUrl).toList());
+    public void use(UseObjectQo qo) {
+        ApplicationDo currentApp = applicationManager.findById(qo.getApplicationId());
+        Collection<String> urls = qo.getUrls();
+        Map<String, ObjectDo> objectMap = objectManager.listByURL(urls).stream().collect(Collectors.toMap(ObjectDo::getUrl, e -> e));
+        ArrayList<ObjectDo> objects = new ArrayList<>();
+        for (String url : urls) {
+            Map<String, Object> map = prepareUseObject(url, objectMap, currentApp);
+            ObjectDo objectDo = (ObjectDo) map.get("objectDo");
 
-        for (ObjectDo objectDO : objectDos) {
-            if (UsageStatus.UPLOADED.equals(objectDO.getUsageStatus())) {
-                objectDO.setUsageStatus(UsageStatus.USED);
-                objectDO.setUsageNum(objectDO.getUsageNum() + 1);
-                objectDO.setUsedTime(LocalDateTime.now());
-            } else if (UsageStatus.USED.equals(objectDO.getUsageStatus())) {
-                objectDO.setUsageNum(objectDO.getUsageNum() + 1);
-            } else if (UsageStatus.DELETION_MARKED.equals(objectDO.getUsageStatus())) {
-                objectDO.setUsageStatus(UsageStatus.USED);
-                objectDO.setUsageNum(objectDO.getUsageNum() + 1);
-                objectDO.setUsedTime(LocalDateTime.now());
-                objectDO.setDeletionReason(null);
-                objectDO.setMarkedDeletionTime(null);
-            } else if (UsageStatus.DELETED.equals(objectDO.getUsageStatus())) {
-                throw new ServiceException(AliErrorCode.USER_ERROR_A0402, "资源已被删除，url<%s>，删除原因<%s>".formatted(objectDO.getUrl(), objectDO.getDeletionReason()));
+            assertAccessRight(url, currentApp, (ApplicationDo) map.get("objectApp"));
+
+            if (UsageStatus.UPLOADED.equals(objectDo.getUsageStatus())) {
+                objectDo.setUsageStatus(UsageStatus.USED);
+                objectDo.setUsageNum(objectDo.getUsageNum() + 1);
+                objectDo.setUsedTime(LocalDateTime.now());
+            } else if (UsageStatus.USED.equals(objectDo.getUsageStatus())) {
+                objectDo.setUsageNum(objectDo.getUsageNum() + 1);
+            } else if (UsageStatus.DELETION_MARKED.equals(objectDo.getUsageStatus())) {
+                objectDo.setUsageStatus(UsageStatus.USED);
+                objectDo.setUsageNum(objectDo.getUsageNum() + 1);
+                objectDo.setUsedTime(LocalDateTime.now());
+                objectDo.setDeletionReason(null);
+                objectDo.setMarkedDeletionTime(null);
+            } else if (UsageStatus.DELETED.equals(objectDo.getUsageStatus())) {
+                throw new ServiceException(AliErrorCode.USER_ERROR_A0402, "资源已被删除，url<%s>，删除原因<%s>".formatted(objectDo.getUrl(), objectDo.getDeletionReason()));
             } else {
-                throw new ServiceException(AliErrorCode.USER_ERROR_A0402, "资源状态异常，url<%s>，期望状态<UPLOADED、USED、DELETION_MARKED>，当前状态<%s>".formatted(objectDO.getUrl(), objectDO.getUsageStatus()));
+                throw new ServiceException(AliErrorCode.USER_ERROR_A0402, "资源状态异常，url<%s>，期望状态<UPLOADED、USED、DELETION_MARKED>，当前状态<%s>".formatted(objectDo.getUrl(), objectDo.getUsageStatus()));
+            }
+            objects.add(objectDo);
+        }
+        objectManager.updateBatchById(objects);
+        log.info("使用资源成功，urls<%s>".formatted(urls));
+    }
+
+    private Map<String, Object> prepareUseObject(String url, Map<String, ObjectDo> objectMap, ApplicationDo currentApp) {
+        ObjectDo objectDo = objectMap.get(url);
+        ApplicationDo objectApp;
+        if (Objects.isNull(objectDo)) {
+            ObjectUrlDto urlDto = parseUrl(url);
+            FileInfo fileInfo = getFileInfo(urlDto.getKey());
+            objectApp = applicationManager.getByNameAndProfile(urlDto.getProjectName(), urlDto.getProfile());
+            if (Objects.isNull(objectApp)) {
+                objectApp = createProfileShareLevelApplication(urlDto);
+            }
+            objectDo = createObject(url, fileInfo, objectApp.getId());
+            objectMap.put(url, objectDo);
+        } else {
+            objectApp = currentApp.getId().equals(objectDo.getApplicationId()) ? currentApp : applicationManager.findById(objectDo.getApplicationId());
+        }
+        return Map.of(
+                "objectDo", objectDo,
+                "objectApp", objectApp
+        );
+    }
+
+    private FileInfo getFileInfo(String key) {
+        try {
+            return bucketManager.stat(bucketName, key);
+        } catch (QiniuException e) {
+            throw new ServiceException(AliErrorCode.SERVICE_ERROR_C0402, "未找到资源，url<%s>".formatted(key));
+        }
+    }
+
+    private ObjectUrlDto parseUrl(String urlString) {
+        URL url = URLUtil.url(urlString);
+        String key = StrUtil.strip(url.getPath(), "/", "");
+        String[] pathSegments = key.split("/");
+        if (pathSegments.length != 3) {
+            throw new ServiceException(AliErrorCode.SERVICE_ERROR_C0402, "资源url格式错误，url<%s>".formatted(urlString));
+        }
+        return ObjectUrlDto.builder()
+                .key(key)
+                .projectName(pathSegments[0])
+                .profile(pathSegments[1])
+                .build();
+    }
+
+    private ObjectDo createObject(String url, FileInfo fileInfo, Long applicationId) {
+        Type type;
+        if (fileInfo.mimeType.startsWith("image")) {
+            type = Type.IMAGE;
+        } else {
+            throw new ServiceException(AliErrorCode.USER_ERROR_A0402, "不支持的资源类型，url<%s>".formatted(url));
+        }
+
+        long millis = fileInfo.putTime / 10000;
+        long nanos = (int) (fileInfo.putTime % 10000) * 100;
+        Instant instant = Instant.ofEpochMilli(millis).plusNanos(nanos);
+        LocalDateTime uploadTime = LocalDateTime.ofInstant(instant, ZoneId.of("Asia/Shanghai"));
+
+        ObjectDo object = ObjectDo.builder()
+                .type(type)
+                .url(url)
+                .usageStatus(UsageStatus.UPLOADED)
+                .usageNum(0)
+                .generatedTime(LocalDateTime.now())
+                .uploadedTime(uploadTime)
+                .applicationId(applicationId)
+                .build();
+        objectManager.save(object);
+        return object;
+    }
+
+    private void assertAccessRight(String url, ApplicationDo currentApp, ApplicationDo objectApp) {
+        if (!currentApp.getId().equals(objectApp.getId())) {
+            if (ShareLevel.PROFILE.equals(objectApp.getShareLevel())) {
+                if (!currentApp.getProjectName().equals(objectApp.getProjectName())) {
+                    throw new ServiceException(AliErrorCode.USER_ERROR_A0402, "无权使用该资源，applicationId<%s>，url<%s>".formatted(currentApp.getId(), url));
+                }
+            } else {
+                throw new ServiceException(AliErrorCode.USER_ERROR_A0402, "无权使用该资源，applicationId<%s>，url<%s>".formatted(currentApp.getId(), url));
             }
         }
-        objectManager.updateBatchById(objectDos);
-        log.info("使用资源成功，urls<%s>".formatted(urls));
+    }
+
+    private ApplicationDo createProfileShareLevelApplication(ObjectUrlDto dto) {
+        // TODO 应该有一个全局的地方生成默认的pathPrefix
+        ApplicationDo application = ApplicationDo.builder()
+                .projectName(dto.getProjectName())
+                .profile(dto.getProfile())
+                .pathPrefix("%s/%s/".formatted(dto.getProjectName(), dto.getProfile()))
+                .shareLevel(ShareLevel.PROFILE)
+                .build();
+        applicationManager.save(application);
+        return application;
     }
 
     @Override
     @GlobalTransactional(name = "删除资源")
-    public void delete(Set<String> urls) {
+    public void delete(DeleteObjectQo qo) {
+        ApplicationDo currentApp = applicationManager.findById(qo.getApplicationId());
+        Collection<String> urls = qo.getUrls();
         List<ObjectDo> objectDos = objectManager.listByURL(urls);
 
         for (ObjectDo objectDO : objectDos) {
+            ApplicationDo objectApp = applicationManager.findById(objectDO.getApplicationId());
+            assertAccessRight(objectDO.getUrl(), currentApp, objectApp);
+
             if (UsageStatus.USED.equals(objectDO.getUsageStatus())) {
                 objectDO.setUsageNum(objectDO.getUsageNum() - 1);
                 log.info("减少资源使用数，url<%s>，剩余使用数<%d>".formatted(objectDO.getUrl(), objectDO.getUsageNum()));
