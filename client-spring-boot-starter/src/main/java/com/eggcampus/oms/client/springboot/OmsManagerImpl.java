@@ -9,6 +9,7 @@ import com.eggcampus.oms.api.pojo.qo.UseObjectQo;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.lang.Nullable;
 
 import java.util.Collection;
 import java.util.List;
@@ -36,7 +37,7 @@ public class OmsManagerImpl implements OmsManager {
     }
 
     @Override
-    public void use(String urls) {
+    public void use(@Nullable String urls) {
         if (urls == null) {
             return;
         }
@@ -44,7 +45,7 @@ public class OmsManagerImpl implements OmsManager {
     }
 
     @Override
-    public void use(Collection<String> urls) {
+    public void use(@Nullable Collection<String> urls) {
         if (urls == null || urls.isEmpty()) {
             return;
         }
@@ -54,7 +55,7 @@ public class OmsManagerImpl implements OmsManager {
     }
 
     @Override
-    public void delete(String urls) {
+    public void delete(@Nullable String urls) {
         if (urls == null) {
             return;
         }
@@ -62,7 +63,7 @@ public class OmsManagerImpl implements OmsManager {
     }
 
     @Override
-    public void delete(Collection<String> urls) {
+    public void delete(@Nullable Collection<String> urls) {
         if (urls == null || urls.isEmpty()) {
             return;
         }
@@ -72,14 +73,14 @@ public class OmsManagerImpl implements OmsManager {
     }
 
     @Override
-    public void change(String oldUrls, String newUrls) {
+    public void change(@Nullable String oldUrls, @Nullable String newUrls) {
         List<String> oldUrlsList = oldUrls == null ? List.of() : OmsUtil.convert2List(oldUrls);
         List<String> newUrlsList = newUrls == null ? List.of() : OmsUtil.convert2List(newUrls);
         change(oldUrlsList, newUrlsList);
     }
 
     @Override
-    public void change(Collection<String> oldUrls, Collection<String> newUrls) {
+    public void change(@Nullable Collection<String> oldUrls, @Nullable Collection<String> newUrls) {
         if (oldUrls == null) {
             oldUrls = List.of();
         }

@@ -3,6 +3,7 @@ package com.eggcampus.oms.server.manager;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.eggcampus.oms.api.pojo.ObjectDo;
 import com.eggcampus.oms.api.pojo.ObjectDo.UsageStatus;
+import org.springframework.lang.Nullable;
 
 import java.util.Collection;
 import java.util.List;
@@ -17,6 +18,7 @@ public interface ObjectManager extends IService<ObjectDo> {
      * @param url url
      * @return {@link ObjectDo}
      */
+    @Nullable
     ObjectDo getByURL(String url);
 
     /**

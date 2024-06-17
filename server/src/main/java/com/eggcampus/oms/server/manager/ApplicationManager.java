@@ -3,6 +3,8 @@ package com.eggcampus.oms.server.manager;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.eggcampus.oms.api.pojo.ApplicationDo;
 
+import javax.annotation.Nullable;
+
 /**
  * @author 黄磊
  */
@@ -23,6 +25,7 @@ public interface ApplicationManager extends IService<ApplicationDo> {
      * @param profile     环境
      * @return 应用
      */
+    @Nullable
     ApplicationDo getByNameAndProfile(String projectName, String profile);
 
     /**

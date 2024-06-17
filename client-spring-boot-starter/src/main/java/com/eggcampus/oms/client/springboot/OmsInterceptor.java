@@ -15,6 +15,7 @@ import org.apache.ibatis.plugin.Intercepts;
 import org.apache.ibatis.plugin.Invocation;
 import org.apache.ibatis.plugin.Signature;
 import org.apache.ibatis.session.RowBounds;
+import org.springframework.lang.Nullable;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
@@ -241,6 +242,7 @@ public class OmsInterceptor implements Interceptor {
         return (Wrapper<?>) wrapper;
     }
 
+    @Nullable
     private Object getEntityId(Object et) {
         try {
             List<Field> fields = ReflectUtil.getFieldByAnnotation(et.getClass(), TableId.class);

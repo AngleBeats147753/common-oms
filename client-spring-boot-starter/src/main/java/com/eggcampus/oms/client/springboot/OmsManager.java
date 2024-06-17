@@ -1,6 +1,7 @@
 package com.eggcampus.oms.client.springboot;
 
 import com.eggcampus.oms.api.pojo.dto.UploadTokenDto;
+import org.springframework.lang.Nullable;
 
 import java.util.Collection;
 
@@ -21,28 +22,28 @@ public interface OmsManager {
      *
      * @param urls 资源urls
      */
-    void use(String urls);
+    void use(@Nullable String urls);
 
     /**
      * 使用资源
      *
      * @param urls 资源urls
      */
-    void use(Collection<String> urls);
+    void use(@Nullable Collection<String> urls);
 
     /**
      * 删除资源
      *
      * @param urls 资源的URLs
      */
-    void delete(String urls);
+    void delete(@Nullable String urls);
 
     /**
      * 删除资源
      *
      * @param urls 资源的URL
      */
-    void delete(Collection<String> urls);
+    void delete(@Nullable Collection<String> urls);
 
     /**
      * 修改资源
@@ -53,7 +54,7 @@ public interface OmsManager {
      * @param oldUrls 旧资源的URL，多个资源之间用英文逗号分隔
      * @param newUrls 新资源的URL，多个资源之间用英文逗号分隔
      */
-    void change(String oldUrls, String newUrls);
+    void change(@Nullable String oldUrls, @Nullable String newUrls);
 
     /**
      * 修改资源
@@ -64,5 +65,5 @@ public interface OmsManager {
      * @param oldUrls 旧资源的URL
      * @param newUrls 新资源的URL
      */
-    void change(Collection<String> oldUrls, Collection<String> newUrls);
+    void change(@Nullable Collection<String> oldUrls, @Nullable Collection<String> newUrls);
 }
