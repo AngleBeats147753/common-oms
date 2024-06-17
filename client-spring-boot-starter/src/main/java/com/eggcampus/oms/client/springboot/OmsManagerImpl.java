@@ -1,9 +1,9 @@
 package com.eggcampus.oms.client.springboot;
 
-import com.campus.util.springboot.application.EggCampusApplicationManager;
 import com.eggcampus.oms.api.manager.OmsFeignManager;
-import com.eggcampus.oms.api.pojo.dto.UploadTokenDTO;
-import com.eggcampus.oms.api.pojo.qo.UploadTokenGenerationQuery;
+import com.eggcampus.oms.api.pojo.dto.OmsApplicationDto;
+import com.eggcampus.oms.api.pojo.dto.UploadTokenDto;
+import com.eggcampus.oms.api.pojo.qo.UploadTokenGenerationQo;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
@@ -18,20 +18,20 @@ import java.util.List;
 @Slf4j
 public class OmsManagerImpl implements OmsManager {
 
-    private final EggCampusApplicationManager applicationManager;
+    private final OmsApplicationDto application;
     private final OmsFeignManager omsFeignManager;
     private final ObjectMapper objectMapper;
 
-    public OmsManagerImpl(OmsFeignManager omsFeignManager, EggCampusApplicationManager applicationManager, ObjectMapper objectMapper) {
+    public OmsManagerImpl(OmsFeignManager omsFeignManager, OmsApplicationDto application, ObjectMapper objectMapper) {
         this.omsFeignManager = omsFeignManager;
-        this.applicationManager = applicationManager;
+        this.application = application;
         this.objectMapper = objectMapper;
     }
 
     @Override
-    public UploadTokenDTO generateImageUploadToken(@NonNull String imageName) {
-        Object data = omsFeignManager.generateUploadToken(new UploadTokenGenerationQuery(applicationManager.getApplication(), imageName)).getData();
-        return objectMapper.convertValue(data, UploadTokenDTO.class);
+    public UploadTokenDto generateImageUploadToken(@NonNull String imageName) {
+        Object data = omsFeignManager.generateUploadToken(new UploadTokenGenerationQo(application.getApplicationId(), imageName)).getData();
+        return objectMapper.convertValue(data, UploadTokenDto.class);
     }
 
     @Override

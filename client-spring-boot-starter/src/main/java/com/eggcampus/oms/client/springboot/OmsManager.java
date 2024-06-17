@@ -1,10 +1,8 @@
 package com.eggcampus.oms.client.springboot;
 
-import com.eggcampus.oms.api.pojo.dto.UploadTokenDTO;
-import com.eggcampus.oms.api.pojo.qo.DeletionQuery;
+import com.eggcampus.oms.api.pojo.dto.UploadTokenDto;
 
 import java.util.Collection;
-import java.util.List;
 
 /**
  * @author 黄磊
@@ -16,7 +14,7 @@ public interface OmsManager {
      * @param imageName 图像名称
      * @return 上传凭证
      */
-    UploadTokenDTO generateImageUploadToken(String imageName);
+    UploadTokenDto generateImageUploadToken(String imageName);
 
     /**
      * 使用资源

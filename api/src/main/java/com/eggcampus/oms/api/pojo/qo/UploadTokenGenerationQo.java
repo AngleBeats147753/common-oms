@@ -1,12 +1,10 @@
 package com.eggcampus.oms.api.pojo.qo;
 
-import com.campus.util.springboot.application.EggCampusApplicationDTO;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.validator.constraints.Length;
 
-import javax.validation.Valid;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
@@ -19,10 +17,9 @@ import javax.validation.constraints.Pattern;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class UploadTokenGenerationQuery {
-    @Valid
-    @NotNull(message = "application不能为null")
-    private EggCampusApplicationDTO application;
+public class UploadTokenGenerationQo {
+    @NotNull(message = "applicationId不能为null")
+    private Long applicationId;
 
     @Length(max = 255, message = "imageName长度不能超过255")
     @NotEmpty(message = "对象名不能为空")

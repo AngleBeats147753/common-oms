@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class UploadTokenDTO {
+public class UploadTokenDto {
     private String key;
     private String token;
     private String url;

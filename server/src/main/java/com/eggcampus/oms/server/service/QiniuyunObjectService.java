@@ -7,12 +7,13 @@ import cn.hutool.core.util.URLUtil;
 import cn.hutool.extra.servlet.ServletUtil;
 import cn.hutool.json.JSONUtil;
 import com.eggcampus.oms.api.constant.DeletionReason;
-import com.eggcampus.oms.api.pojo.ApplicationDO;
-import com.eggcampus.oms.api.pojo.ObjectDO;
-import com.eggcampus.oms.api.pojo.ObjectDO.UsageStatus;
-import com.eggcampus.oms.api.pojo.dto.UploadTokenDTO;
-import com.eggcampus.oms.api.pojo.qo.UploadTokenGenerationQuery;
+import com.eggcampus.oms.api.pojo.ApplicationDo;
+import com.eggcampus.oms.api.pojo.ObjectDo;
+import com.eggcampus.oms.api.pojo.ObjectDo.UsageStatus;
+import com.eggcampus.oms.api.pojo.dto.UploadTokenDto;
+import com.eggcampus.oms.api.pojo.qo.UploadTokenGenerationQo;
 import com.eggcampus.oms.server.config.QiniuyunProperties;
+import com.eggcampus.oms.server.manager.ApplicationManager;
 import com.eggcampus.oms.server.manager.ObjectManager;
 import com.eggcampus.util.exception.result.ServiceException;
 import com.eggcampus.util.result.AliErrorCode;
@@ -41,7 +42,7 @@ public class QiniuyunObjectService implements ObjectService {
      */
     String CALLBACK_BODY_URL_KEY = "url";
 
-    private final ApplicationService applicationService;
+    private final ApplicationManager applicationManager;
     private final ObjectManager objectManager;
     private final QiniuyunProperties properties;
     private final String ossCallbackURL;
@@ -49,10 +50,10 @@ public class QiniuyunObjectService implements ObjectService {
     private final String bucketName;
     private final Auth auth;
 
-    public QiniuyunObjectService(ApplicationService applicationService,
+    public QiniuyunObjectService(ApplicationManager applicationManager,
                                  ObjectManager objectManager,
                                  QiniuyunProperties properties) {
-        this.applicationService = applicationService;
+        this.applicationManager = applicationManager;
         this.objectManager = objectManager;
         this.properties = properties;
         this.auth = Auth.create(properties.getAccessKey(), properties.getSecretKey());
@@ -67,9 +68,9 @@ public class QiniuyunObjectService implements ObjectService {
 
     @Override
     @GlobalTransactional(name = "生成图像的上传凭证")
-    public UploadTokenDTO generateImageUploadToken(UploadTokenGenerationQuery query) {
-        ApplicationDO application = applicationService.findApplication(query.getApplication());
-        String path = application.getPathPrefix() + query.getImageName();
+    public UploadTokenDto generateImageUploadToken(UploadTokenGenerationQo qo) {
+        ApplicationDo application = applicationManager.findById(qo.getApplicationId());
+        String path = application.getPathPrefix() + qo.getImageName();
         String url = getURL(path);
         objectManager.assertNonExistenceByURL(url);
 
@@ -77,7 +78,7 @@ public class QiniuyunObjectService implements ObjectService {
         saveObject(application.getId(), url);
         String token = auth.uploadToken(properties.getBucket(), path, properties.getUploadExpireSecond(), uploadPolicy);
         log.info("生成图像上传凭证，url<%s>".formatted(url));
-        return new UploadTokenDTO(path, token, url);
+        return new UploadTokenDto(path, token, url);
     }
 
     private String getURL(String path) {
@@ -103,12 +104,12 @@ public class QiniuyunObjectService implements ObjectService {
     }
 
     private void saveObject(Long applicationId, String url) {
-        ObjectDO objectDO = new ObjectDO();
+        ObjectDo objectDO = new ObjectDo();
         objectDO.setUrl(url);
         objectDO.setUsageStatus(UsageStatus.GENERATED);
         objectDO.setUsageNum(0);
         objectDO.setGeneratedTime(LocalDateTime.now());
-        objectDO.setType(ObjectDO.Type.IMAGE);
+        objectDO.setType(ObjectDo.Type.IMAGE);
         objectDO.setApplicationId(applicationId);
         objectManager.save(objectDO);
     }
@@ -124,7 +125,7 @@ public class QiniuyunObjectService implements ObjectService {
             }
 
             String url = JSONUtil.parseObj(bodyStr).getStr(CALLBACK_BODY_URL_KEY);
-            ObjectDO objectDO = objectManager.findByURL(url);
+            ObjectDo objectDO = objectManager.findByURL(url);
             objectDO.setUsageStatus(UsageStatus.UPLOADED);
             objectDO.setUploadedTime(LocalDateTime.now());
             objectManager.updateById(objectDO);
@@ -155,10 +156,10 @@ public class QiniuyunObjectService implements ObjectService {
     @GlobalTransactional(name = "使用资源")
     public void use(Set<String> queries) {
         List<String> urls = queries.stream().toList();
-        List<ObjectDO> objectDOS = objectManager.listByURL(urls);
-        assertResourceExistence(urls, objectDOS.stream().map(ObjectDO::getUrl).toList());
+        List<ObjectDo> objectDos = objectManager.listByURL(urls);
+        assertResourceExistence(urls, objectDos.stream().map(ObjectDo::getUrl).toList());
 
-        for (ObjectDO objectDO : objectDOS) {
+        for (ObjectDo objectDO : objectDos) {
             if (UsageStatus.UPLOADED.equals(objectDO.getUsageStatus())) {
                 objectDO.setUsageStatus(UsageStatus.USED);
                 objectDO.setUsageNum(objectDO.getUsageNum() + 1);
@@ -177,16 +178,16 @@ public class QiniuyunObjectService implements ObjectService {
                 throw new ServiceException(AliErrorCode.USER_ERROR_A0402, "资源状态异常，url<%s>，期望状态<UPLOADED、USED、DELETION_MARKED>，当前状态<%s>".formatted(objectDO.getUrl(), objectDO.getUsageStatus()));
             }
         }
-        objectManager.updateBatchById(objectDOS);
+        objectManager.updateBatchById(objectDos);
         log.info("使用资源成功，urls<%s>".formatted(urls));
     }
 
     @Override
     @GlobalTransactional(name = "删除资源")
     public void delete(Set<String> urls) {
-        List<ObjectDO> objectDOS = objectManager.listByURL(urls);
+        List<ObjectDo> objectDos = objectManager.listByURL(urls);
 
-        for (ObjectDO objectDO : objectDOS) {
+        for (ObjectDo objectDO : objectDos) {
             if (UsageStatus.USED.equals(objectDO.getUsageStatus())) {
                 objectDO.setUsageNum(objectDO.getUsageNum() - 1);
                 log.info("减少资源使用数，url<%s>，剩余使用数<%d>".formatted(objectDO.getUrl(), objectDO.getUsageNum()));
@@ -203,7 +204,7 @@ public class QiniuyunObjectService implements ObjectService {
                 throw new ServiceException(AliErrorCode.USER_ERROR_A0402, "资源状态异常，url<%s>，期望状态<UPLOADED、USED、DELETION_MARKED>，当前状态<%s>".formatted(objectDO.getUrl(), objectDO.getUsageStatus()));
             }
         }
-        objectManager.updateBatchById(objectDOS);
+        objectManager.updateBatchById(objectDos);
         log.info("临时删除资源成功，urls<%s>".formatted(urls));
     }
 
@@ -213,7 +214,7 @@ public class QiniuyunObjectService implements ObjectService {
         List<String> urls = queries.stream().toList();
         for (String url : urls) {
             String key = URLUtil.getPath(url).substring(1);
-            ObjectDO object = objectManager.getByURL(url);
+            ObjectDo object = objectManager.getByURL(url);
             if (object == null) {
                 continue;
             }

@@ -2,9 +2,8 @@ package com.eggcampus.oms.server.controller;
 
 import com.campus.util.springboot.log.Log;
 import com.eggcampus.oms.api.manager.OmsFeignManager;
-import com.eggcampus.oms.api.pojo.dto.UploadTokenDTO;
-import com.eggcampus.oms.api.pojo.qo.DeletionQuery;
-import com.eggcampus.oms.api.pojo.qo.UploadTokenGenerationQuery;
+import com.eggcampus.oms.api.pojo.dto.UploadTokenDto;
+import com.eggcampus.oms.api.pojo.qo.UploadTokenGenerationQo;
 import com.eggcampus.oms.server.service.ObjectService;
 import com.eggcampus.util.result.AliErrorCode;
 import com.eggcampus.util.result.ReturnResult;
@@ -27,8 +26,8 @@ public class ObjectController implements OmsFeignManager {
 
     @Log("生成图像的上传凭证")
     @Override
-    public ReturnResult generateUploadToken(@Validated @RequestBody UploadTokenGenerationQuery qo) {
-        UploadTokenDTO uploadToken = objectService.generateImageUploadToken(qo);
+    public ReturnResult generateUploadToken(@Validated @RequestBody UploadTokenGenerationQo qo) {
+        UploadTokenDto uploadToken = objectService.generateImageUploadToken(qo);
         return ReturnResult.getSuccessReturn(uploadToken);
     }
 

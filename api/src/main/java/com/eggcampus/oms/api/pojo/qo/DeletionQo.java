@@ -16,7 +16,7 @@ import javax.validation.constraints.NotEmpty;
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode(of = "objectUrl")
-public class DeletionQuery {
+public class DeletionQo {
     @Length(max = 255, message = "objectUrl长度不能超过255")
     @NotEmpty(message = "objectUrl不能为null或者空字符串")
     private String objectUrl;

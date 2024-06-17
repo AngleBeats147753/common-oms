@@ -1,6 +1,6 @@
 package com.eggcampus.oms.server.dao;
 
-import com.eggcampus.oms.api.pojo.ObjectDO;
+import com.eggcampus.oms.api.pojo.ObjectDo;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import org.apache.ibatis.annotations.Mapper;
 
@@ -13,6 +13,6 @@ import org.apache.ibatis.annotations.Mapper;
  * @since 2024-01-28
  */
 @Mapper
-public interface ObjectDao extends BaseMapper<ObjectDO> {
+public interface ObjectDao extends BaseMapper<ObjectDo> {
 
 }

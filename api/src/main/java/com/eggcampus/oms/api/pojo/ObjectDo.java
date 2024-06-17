@@ -23,7 +23,7 @@ import java.time.LocalDateTime;
  */
 @Data
 @TableName("object")
-public class ObjectDO implements Serializable {
+public class ObjectDo implements Serializable {
 
     @Serial
     private static final long serialVersionUID = 1L;

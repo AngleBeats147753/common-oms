@@ -1,7 +1,6 @@
 package com.eggcampus.oms.api.manager;
 
-import com.eggcampus.oms.api.pojo.qo.DeletionQuery;
-import com.eggcampus.oms.api.pojo.qo.UploadTokenGenerationQuery;
+import com.eggcampus.oms.api.pojo.qo.UploadTokenGenerationQo;
 import com.eggcampus.util.result.ReturnResult;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -21,7 +20,7 @@ public interface OmsFeignManager {
      * @return 上传凭证
      */
     @PostMapping("/image/upload-token")
-    ReturnResult generateUploadToken(@RequestBody UploadTokenGenerationQuery qo);
+    ReturnResult generateUploadToken(@RequestBody UploadTokenGenerationQo qo);
 
     /**
      * 使用资源

@@ -1,8 +1,12 @@
 package com.eggcampus.oms.api.pojo;
 
 import com.baomidou.mybatisplus.annotation.*;
+import com.campus.util.springboot.enums.named.NamedEnumDeserializer;
+import com.campus.util.springboot.mybatisplus.BaseEnum;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import lombok.Data;
+import lombok.Getter;
 
 import java.io.Serial;
 import java.io.Serializable;
@@ -17,15 +21,15 @@ import java.io.Serializable;
  */
 @Data
 @TableName("application")
-public class ApplicationDO implements Serializable {
+public class ApplicationDo implements Serializable {
 
     @Serial
     private static final long serialVersionUID = 1L;
     public static final String ID = "id";
     public static final String PROJECT_NAME = "project_name";
-    public static final String SERVICE_NAME = "service_name";
     public static final String PROFILE = "profile";
     public static final String PATH_PREFIX = "path_prefix";
+    public static final String SHARE_LEVEL = "share_level";
     public static final String VERSION = "version";
     public static final String DELETED = "deleted";
 
@@ -40,12 +44,6 @@ public class ApplicationDO implements Serializable {
      */
     @TableField("project_name")
     private String projectName;
-
-    /**
-     * 服务名
-     */
-    @TableField("service_name")
-    private String serviceName;
 
     /**
      * 环境
@@ -63,6 +61,12 @@ public class ApplicationDO implements Serializable {
     private String pathPrefix;
 
     /**
+     * 共享等级
+     */
+    @TableField("share_level")
+    private ShareLevel shareLevel;
+
+    /**
      * 乐观锁
      */
     @TableField("version")
@@ -78,5 +82,17 @@ public class ApplicationDO implements Serializable {
     @JsonIgnore
     private Long deleted;
 
+    @Getter
+    @JsonDeserialize(using = NamedEnumDeserializer.class)
+    public enum ShareLevel implements BaseEnum<Integer> {
+        NONE(0, "不共享"),
+        ALL(1, "全部");
+        private final Integer value;
+        private final String name;
 
+        ShareLevel(Integer value, String name) {
+            this.value = value;
+            this.name = name;
+        }
+    }
 }

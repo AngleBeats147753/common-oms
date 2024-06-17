@@ -1,7 +1,7 @@
 package com.eggcampus.oms.server.service;
 
-import com.eggcampus.oms.api.pojo.dto.UploadTokenDTO;
-import com.eggcampus.oms.api.pojo.qo.UploadTokenGenerationQuery;
+import com.eggcampus.oms.api.pojo.dto.UploadTokenDto;
+import com.eggcampus.oms.api.pojo.qo.UploadTokenGenerationQo;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.Set;
@@ -21,7 +21,7 @@ public interface ObjectService {
      * @param query 生成上传凭证时所需的数据
      * @return 上传凭证
      */
-    UploadTokenDTO generateImageUploadToken(UploadTokenGenerationQuery query);
+    UploadTokenDto generateImageUploadToken(UploadTokenGenerationQo query);
 
     /**
      * 处理OSS的回调信息
