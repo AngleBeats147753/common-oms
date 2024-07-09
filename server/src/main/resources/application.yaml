@@ -4,7 +4,7 @@ spring:
   application:
     name: 'common-oms'
   profiles:
-    active: dev
+    active: pro
   cloud:
     config:
       enabled: false

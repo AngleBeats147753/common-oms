@@ -7,7 +7,6 @@ import com.eggcampus.oms.api.pojo.qo.DeleteObjectQo;
 import com.eggcampus.oms.api.pojo.qo.UploadTokenGenerationQo;
 import com.eggcampus.oms.api.pojo.qo.UseObjectQo;
 import com.eggcampus.oms.server.service.ObjectService;
-import com.eggcampus.util.result.AliErrorCode;
 import com.eggcampus.util.result.ReturnResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -16,7 +15,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
-import java.util.Set;
 
 /**
  * @author 黄磊
@@ -30,7 +28,7 @@ public class ObjectController implements OmsFeignManager {
     @Override
     public ReturnResult generateUploadToken(@Validated @RequestBody UploadTokenGenerationQo qo) {
         UploadTokenDto uploadToken = objectService.generateImageUploadToken(qo);
-        return ReturnResult.getSuccessReturn(uploadToken);
+        return ReturnResult.success(uploadToken);
     }
 
     @Log("OSS资源上传回调")
@@ -44,13 +42,13 @@ public class ObjectController implements OmsFeignManager {
     @Override
     public ReturnResult use(@Validated @RequestBody UseObjectQo qo) {
         objectService.use(qo);
-        return ReturnResult.getSuccessReturn("使用资源成功");
+        return ReturnResult.success("使用资源成功");
     }
 
     @Log("删除资源")
     @Override
     public ReturnResult delete(@Validated @RequestBody DeleteObjectQo qo) {
         objectService.delete(qo);
-        return ReturnResult.getSuccessReturn("删除资源成功");
+        return ReturnResult.success("删除资源成功");
     }
 }

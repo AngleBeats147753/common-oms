@@ -1,8 +1,8 @@
 package com.eggcampus.oms.server.service;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.campus.util.springboot.mybatisplus.PageDTO;
-import com.campus.util.springboot.mybatisplus.PageQo;
+import com.campus.util.springboot.mybatisplus.OffsetPageDto;
+import com.campus.util.springboot.mybatisplus.OffsetPageQo;
 import com.campus.util.springboot.mybatisplus.PageUtil;
 import com.eggcampus.oms.api.pojo.ApplicationDo;
 import com.eggcampus.oms.api.pojo.dto.OmsApplicationDto;
@@ -24,14 +24,14 @@ public class ApplicationReadService {
 
     public ReturnResult getApplication(GetApplicationQo qo) {
         ApplicationDo application = applicationManager.getByNameAndProfile(qo.getProjectName(), qo.getProfile());
-        return ReturnResult.getSuccessReturn(application == null ? null : new OmsApplicationDto(application));
+        return ReturnResult.success(application == null ? null : new OmsApplicationDto(application));
     }
 
-    public ReturnResult getApplications(PageQo pageQo) {
+    public ReturnResult getApplications(OffsetPageQo pageQo) {
         QueryWrapper<ApplicationDo> wrapper = new QueryWrapper<ApplicationDo>()
                 .orderByDesc(ApplicationDo.ID);
-        PageDTO<ApplicationDo> page = applicationManager.page(new PageDTO<>(pageQo), wrapper);
+        OffsetPageDto<ApplicationDo> page = applicationManager.page(new OffsetPageDto<>(pageQo), wrapper);
         List<OmsApplicationDto> list = page.getRecords().stream().map(OmsApplicationDto::new).toList();
-        return ReturnResult.getSuccessReturn(PageUtil.changeRecord(page, list));
+        return ReturnResult.success(PageUtil.changeRecord(page, list));
     }
 }

@@ -6,7 +6,7 @@
     <parent>
         <groupId>com.eggcampus.oms</groupId>
         <artifactId>parent</artifactId>
-        <version>0.2.1-SNAPSHOT</version>
+        <version>0.3.1-SNAPSHOT</version>
     </parent>
     <artifactId>client-spring-boot-starter</artifactId>
 

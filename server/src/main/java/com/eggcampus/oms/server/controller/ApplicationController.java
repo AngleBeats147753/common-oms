@@ -1,7 +1,7 @@
 package com.eggcampus.oms.server.controller;
 
 import com.campus.util.springboot.log.Log;
-import com.campus.util.springboot.mybatisplus.PageQo;
+import com.campus.util.springboot.mybatisplus.OffsetPageQo;
 import com.eggcampus.oms.api.manager.ApplicationFeignManager;
 import com.eggcampus.oms.api.pojo.qo.CreateApplicationQo;
 import com.eggcampus.oms.api.pojo.qo.GetApplicationQo;
@@ -40,7 +40,7 @@ public class ApplicationController implements ApplicationFeignManager {
 
     @Log("获取应用列表")
     @GetMapping("/application/infos")
-    public ReturnResult getApplications(@Validated PageQo qo) {
+    public ReturnResult getApplications(@Validated OffsetPageQo qo) {
         return applicationReadService.getApplications(qo);
     }
 
