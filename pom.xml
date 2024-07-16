@@ -7,7 +7,7 @@
     <groupId>com.eggcampus.oms</groupId>
     <artifactId>parent</artifactId>
     <packaging>pom</packaging>
-    <version>0.3.1-SNAPSHOT</version>
+    <version>0.3.2-SNAPSHOT</version>
 
     <modules>
         <module>server</module>
@@ -25,8 +25,8 @@
         <spring-cloud.version>2021.0.7</spring-cloud.version>
         <mybatis-plus.version>3.5.6</mybatis-plus.version>
         <eggcampus-util-base.version>0.3.1-SNAPSHOT</eggcampus-util-base.version>
-        <eggcampus-util-springboot.version>0.3.1-SNAPSHOT</eggcampus-util-springboot.version>
-        <eggcampus-oms-api.version>0.3.1-SNAPSHOT</eggcampus-oms-api.version>
+        <eggcampus-util-springboot.version>0.3.2-SNAPSHOT</eggcampus-util-springboot.version>
+        <eggcampus-oms-api.version>0.3.2-SNAPSHOT</eggcampus-oms-api.version>
         <hutool.version>5.8.27</hutool.version>
         <seata.version>1.8.0</seata.version>
         <qiniu.version>7.14.0</qiniu.version>
