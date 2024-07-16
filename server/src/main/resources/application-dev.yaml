@@ -21,4 +21,4 @@ seata:
       default: 100.64.0.8:10002
 eggcampus:
   exception:
-    print-error-message: true
+    return-error-message: true
