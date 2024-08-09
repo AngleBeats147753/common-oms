@@ -8,12 +8,48 @@
     <artifactId>parent</artifactId>
     <packaging>pom</packaging>
     <version>0.3.2</version>
+    <name>common-oms</name>
+    <description>common-oms</description>
+    <url>https://gitee.com/angelbeats147753_admin/common-oms</url>
 
     <modules>
         <module>server</module>
         <module>client-spring-boot-starter</module>
         <module>api</module>
     </modules>
+
+    <licenses>
+        <license>
+            <name>The Apache Software License, Version 2.0</name>
+            <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+        </license>
+    </licenses>
+
+    <developers>
+        <developer>
+            <id>AngelBeats</id>
+            <name>AngelBeats</name>
+            <email>angelbeats147753@foxmail.com</email>
+            <roles>
+                <role>Developer</role>
+            </roles>
+        </developer>
+        <developer>
+            <id>dd</id>
+            <name>dd</name>
+            <email>zjd_xwyxs7@163.com</email>
+            <roles>
+                <role>Developer</role>
+            </roles>
+        </developer>
+    </developers>
+
+    <scm>
+        <connection>https://gitee.com/angelbeats147753_admin/common-oms.git</connection>
+        <developerConnection>scm:git:ssh://git@gitee.com:angelbeats147753_admin/common-oms.git
+        </developerConnection>
+        <url>https://gitee.com/angelbeats147753_admin/common-oms</url>
+    </scm>
 
     <properties>
         <java.version>17</java.version>
@@ -146,5 +182,70 @@
             <url>https://eggcampus-maven.pkg.coding.net/repository/backend-public-server/default-maven/</url>
         </repository>
     </distributionManagement>
+
+    <profiles>
+        <profile>
+            <id>central</id>
+            <build>
+                <plugins>
+                    <!--   central发布插件    -->
+                    <plugin>
+                        <groupId>org.sonatype.central</groupId>
+                        <artifactId>central-publishing-maven-plugin</artifactId>
+                        <version>0.5.0</version>
+                        <extensions>true</extensions>
+                        <configuration>
+                            <publishingServerId>${publishingServerId}</publishingServerId>
+                            <autoPublish>true</autoPublish>
+                        </configuration>
+                    </plugin>
+                    <!--  ource源码插件 -->
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-source-plugin</artifactId>
+                        <version>2.2.1</version>
+                        <executions>
+                            <execution>
+                                <id>attach-sources</id>
+                                <phase>package</phase>
+                                <goals>
+                                    <goal>jar-no-fork</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <!--   javadoc插件 -->
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-javadoc-plugin</artifactId>
+                        <version>3.8.0</version>
+                        <executions>
+                            <execution>
+                                <id>attach-javadocs</id>
+                                <phase>package</phase>
+                                <goals>
+                                    <goal>jar</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-gpg-plugin</artifactId>
+                        <version>3.2.0</version>
+                        <executions>
+                            <execution>
+                                <id>sign-artifacts</id>
+                                <phase>verify</phase>
+                                <goals>
+                                    <goal>sign</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
 
 </project>
